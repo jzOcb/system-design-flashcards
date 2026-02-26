@@ -14,7 +14,12 @@ const WordRoots = [
       "mutation { createPost(input: {...}) } - GraphQL 变更",
       "service.GetUser(request) - gRPC 调用"
     ],
-    videoId: "DQ57zYedMdQ"
+    videoId: "DQ57zYedMdQ",
+    quiz: {
+      question: "以下哪种 API 设计风格最适合内部微服务之间的高性能通信？",
+      options: ["REST", "GraphQL", "gRPC", "SOAP"],
+      correctAnswer: 2
+    }
   },
   {
     id: 2,
@@ -27,7 +32,12 @@ const WordRoots = [
       "帖子表：post_id, user_id (FK), content, created_at",
       "多对多：followers 表 (follower_id, followee_id)"
     ],
-    videoId: "TUcPS6dsWx4"
+    videoId: "TUcPS6dsWx4",
+    quiz: {
+      question: "以下哪个不是选择 SQL 数据库的主要原因？",
+      options: ["需要强一致性", "需要 ACID 事务", "需要灵活的 schema", "需要复杂的关联查询"],
+      correctAnswer: 2
+    }
   },
   {
     id: 3,
@@ -40,7 +50,12 @@ const WordRoots = [
       "热门帖子 - LRU 淘汰，容量限制",
       "Session 存储 - Redis + TTL"
     ],
-    videoId: "1NngTUYPdpI"
+    videoId: "1NngTUYPdpI",
+    quiz: {
+      question: "LRU 缓存淘汰策略的含义是什么？",
+      options: ["Least Recently Used（最近最少使用）", "Least Required Usage（最少必需使用）", "Latest Request Updated（最新请求更新）", "Low Rate Usage（低频率使用）"],
+      correctAnswer: 0
+    }
   },
   {
     id: 4,
@@ -53,7 +68,12 @@ const WordRoots = [
       "按时间范围分片 - 冷热数据分离",
       "按地理位置分片 - 就近访问"
     ],
-    videoId: "L521gizea4s"
+    videoId: "L521gizea4s",
+    quiz: {
+      question: "选择分片键时，以下哪个不是关键考虑因素？",
+      options: ["数据均匀分布", "避免热点", "支持常用查询", "字段名称长度"],
+      correctAnswer: 3
+    }
   },
   {
     id: 5,
@@ -66,7 +86,12 @@ const WordRoots = [
       "视频点播：S3 + CloudFront CDN",
       "预签名 URL：临时授权直接上传/下载"
     ],
-    videoId: "RvaMHMxHjp4"
+    videoId: "RvaMHMxHjp4",
+    quiz: {
+      question: "使用 Object Storage（如 S3）存储大文件时，数据库应该存储什么？",
+      options: ["文件的完整二进制数据", "文件的唯一 key/路径", "文件的 Base64 编码", "文件的 MD5 哈希值"],
+      correctAnswer: 1
+    }
   },
   {
     id: 6,
@@ -79,7 +104,12 @@ const WordRoots = [
       "AWS ALB 自动扩展",
       "健康检查：/health 端点 + 自动摘除"
     ],
-    videoId: "Ru54dxzCyD0"
+    videoId: "Ru54dxzCyD0",
+    quiz: {
+      question: "L7（应用层）负载均衡相比 L4（传输层）的主要优势是什么？",
+      options: ["更快的处理速度", "可以基于内容（URL/Header）路由", "更低的 CPU 使用率", "更简单的配置"],
+      correctAnswer: 1
+    }
   },
   {
     id: 7,
@@ -92,7 +122,12 @@ const WordRoots = [
       "虚拟节点：每个物理节点映射 100+ 虚拟节点",
       "节点加入：只迁移顺时针相邻节点的部分数据"
     ],
-    videoId: "Consistent Hashing: Easy Explanation"
+    videoId: "Consistent Hashing: Easy Explanation",
+    quiz: {
+      question: "一致性哈希相比普通哈希的主要优势是什么？",
+      options: ["哈希计算更快", "节点增减时只需迁移少量数据", "完全不需要数据迁移", "支持更多的节点数量"],
+      correctAnswer: 1
+    }
   },
   {
     id: 8,
@@ -105,7 +140,12 @@ const WordRoots = [
       "AP 系统：Cassandra, DynamoDB, DNS",
       "PACELC：正常时 Latency vs Consistency 的权衡"
     ],
-    videoId: "CAP Theorem in System Design"
+    videoId: "CAP Theorem in System Design",
+    quiz: {
+      question: "在 CAP 定理中，为什么实际选择通常是 CP vs AP？",
+      options: ["Consistency 和 Availability 可以同时满足", "Partition Tolerance 在分布式系统中必须保证", "网络永远不会出现分区", "现代硬件足够可靠"],
+      correctAnswer: 1
+    }
   },
 
   // === 系统设计题目 (Design Problems) ===

@@ -5,6 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>闪卡 | System Design 面试速成</title>
   <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .flashcard {
+      height: auto;
+      min-height: 350px;
+    }
+    .flashcard-front, .flashcard-back {
+      padding: 2rem;
+      height: auto;
+      min-height: 350px;
+    }
+    .flashcard-question {
+      font-size: 1.5rem;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+    .flashcard-category {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    .flashcard-answer {
+      font-size: 1rem;
+      line-height: 1.8;
+      text-align: left;
+      white-space: pre-line;
+    }
+    .flashcard-followup {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed rgba(0,0,0,0.2);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+    .flashcard-back {
+      background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+      color: #1F2937;
+    }
+    .mode-selector {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card-bg);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .mode-btn:hover, .mode-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+  </style>
 </head>
 <body>
   <nav class="nav">
@@ -13,48 +84,86 @@
       <a href="learn.html">学习</a>
       <a href="flashcard.html" class="active">闪卡</a>
       <a href="roots.html">索引</a>
-      <a href="calculator.html">计算器</a>
       <a href="progress.html">进度</a>
     </div>
   </nav>
 
-  <div class="flashcard-container">
-    <div class="learn-progress" id="progress-text">1 / 30</div>
+  <div class="flashcard-container" style="max-width: 600px;">
+    <div class="mode-selector" id="modes">
+      <button class="mode-btn active" data-mode="all" onclick="setMode('all')">全部</button>
+      <button class="mode-btn" data-mode="权衡决策" onclick="setMode('权衡决策')">权衡决策</button>
+      <button class="mode-btn" data-mode="数字估算" onclick="setMode('数字估算')">数字估算</button>
+      <button class="mode-btn" data-mode="场景判断" onclick="setMode('场景判断')">场景判断</button>
+      <button class="mode-btn" data-mode="设计题" onclick="setMode('设计题')">设计题</button>
+      <button class="mode-btn" data-mode="面试技巧" onclick="setMode('面试技巧')">面试技巧</button>
+    </div>
+
+    <div class="stats-bar">
+      <span id="progress-text">1 / 30</span>
+      <span id="category-text">权衡决策</span>
+    </div>
     
     <div class="flashcard" id="flashcard" onclick="flip()">
       <div class="flashcard-inner">
         <div class="flashcard-front">
-          <div class="flashcard-root" id="root">API Design</div>
-          <div class="flashcard-hint">点击翻转查看含义</div>
+          <div class="flashcard-category" id="category">权衡决策</div>
+          <div class="flashcard-question" id="question">什么时候选 SQL，什么时候选 NoSQL？</div>
+          <div class="flashcard-hint">点击查看答案 💡</div>
         </div>
         <div class="flashcard-back">
-          <div class="flashcard-meaning" id="meaning">设计系统间通信的接口规范</div>
+          <div class="flashcard-answer" id="answer">...</div>
+          <div class="flashcard-followup" id="followup">...</div>
         </div>
       </div>
     </div>
 
     <div class="flashcard-nav">
-      <button class="btn btn-secondary" onclick="prev()">← 上一个</button>
+      <button class="btn btn-secondary" onclick="prev()">← 上一题</button>
       <button class="btn btn-secondary" onclick="shuffle()">🔀 随机</button>
-      <button class="btn btn-primary" onclick="next()">下一个 →</button>
+      <button class="btn btn-primary" onclick="next()">下一题 →</button>
     </div>
 
-    <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
-      快捷键：← → 翻页，空格翻转
+    <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-size: 0.85rem;">
+      快捷键：← → 切换，空格 翻转，R 随机
     </p>
   </div>
 
-  <script src="wordData.js"></script>
-  <script src="js/storage.js"></script>
+  <script src="flashcardData.js"></script>
   <script>
-    let cards = [...WordRoots];
+    let allCards = [...FlashcardData];
+    let cards = [...FlashcardData];
     let currentIndex = 0;
+    let currentMode = 'all';
+
+    function setMode(mode) {
+      currentMode = mode;
+      if (mode === 'all') {
+        cards = [...allCards];
+      } else {
+        cards = allCards.filter(c => c.category === mode);
+      }
+      currentIndex = 0;
+      
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.mode === mode);
+      });
+      
+      render();
+    }
 
     function render() {
+      if (cards.length === 0) {
+        document.getElementById('question').textContent = '没有匹配的卡片';
+        return;
+      }
+      
       const item = cards[currentIndex];
       document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${cards.length}`;
-      document.getElementById('root').textContent = item.root;
-      document.getElementById('meaning').textContent = item.meaning;
+      document.getElementById('category-text').textContent = item.category;
+      document.getElementById('category').textContent = item.category;
+      document.getElementById('question').textContent = item.question;
+      document.getElementById('answer').textContent = item.answer;
+      document.getElementById('followup').textContent = item.followUp ? `💬 ${item.followUp}` : '';
       document.getElementById('flashcard').classList.remove('flipped');
     }
 
@@ -73,6 +182,10 @@
       if (currentIndex < cards.length - 1) {
         currentIndex++;
         render();
+      } else {
+        // 循环到开头
+        currentIndex = 0;
+        render();
       }
     }
 
@@ -86,6 +199,7 @@
       if (e.key === 'ArrowLeft') prev();
       if (e.key === 'ArrowRight') next();
       if (e.key === ' ') { e.preventDefault(); flip(); }
+      if (e.key === 'r' || e.key === 'R') shuffle();
     });
 
     render();
