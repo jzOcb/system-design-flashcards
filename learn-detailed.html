@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>深度学习 | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .detail-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .detail-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .detail-nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .detail-nav-item {
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .detail-nav-item:hover, .detail-nav-item.active {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .detail-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+    .detail-section {
+      border-bottom: 1px solid var(--border);
+    }
+    .detail-section:last-child {
+      border-bottom: none;
+    }
+    .detail-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .detail-section-header:hover {
+      background: var(--bg);
+    }
+    .detail-section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    .detail-section-icon {
+      font-size: 1.25rem;
+    }
+    .detail-section-content {
+      display: none;
+      padding: 0 1.5rem 1.5rem;
+    }
+    .detail-section.expanded .detail-section-content {
+      display: block;
+    }
+    .detail-section.expanded .expand-icon {
+      transform: rotate(180deg);
+    }
+    .expand-icon {
+      transition: transform 0.2s;
+      color: var(--text-secondary);
+    }
+    .detail-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+    .detail-meaning {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+    .detail-content {
+      line-height: 1.9;
+      color: var(--text);
+    }
+    .detail-content h3 {
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      color: var(--primary-dark);
+    }
+    .detail-content h4 {
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .detail-content pre {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      margin: 1rem 0;
+    }
+    .detail-content code {
+      background: var(--bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .detail-content pre code {
+      background: none;
+      padding: 0;
+    }
+    .detail-content ul, .detail-content ol {
+      padding-left: 1.5rem;
+      margin: 0.75rem 0;
+    }
+    .detail-content li {
+      margin-bottom: 0.5rem;
+    }
+    .detail-content table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .detail-content th, .detail-content td {
+      border: 1px solid var(--border);
+      padding: 0.5rem;
+      text-align: left;
+    }
+    .detail-content th {
+      background: var(--bg);
+    }
+    .tip-box {
+      background: #FEF3C7;
+      border-left: 4px solid #F59E0B;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0 8px 8px 0;
+    }
+    .tip-box.info {
+      background: #DBEAFE;
+      border-left-color: #3B82F6;
+    }
+    .tip-box.warning {
+      background: #FEE2E2;
+      border-left-color: #EF4444;
+    }
+    .progress-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .progress-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .progress-btn:hover {
+      transform: translateY(-2px);
+    }
+    .examples-list {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+    .examples-list li {
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <div class="nav-links">
+      <a href="learn.html">快速</a>
+      <a href="learn-detailed.html" class="active">深度</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="neetcode.html">NeetCode</a>
+      <a href="search.html">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+  <div class="detail-container">
+    <div class="detail-header">
+      <h1>📚 System Design 深度学习</h1>
+      <p style="color: var(--text-secondary);">零基础也能看懂的详细讲解，包含原理、案例、面试技巧</p>
+    </div>
+
+    <div class="detail-nav" id="topic-nav"></div>
+
+    <div id="content-area">
+      <!-- 动态生成 -->
+    </div>
+
+    <div class="progress-nav">
+      <button class="btn btn-secondary progress-btn" id="prev-btn" onclick="prevTopic()">← 上一个</button>
+      <span id="progress-text" style="align-self: center; color: var(--text-secondary);">1 / 4</span>
+      <button class="btn btn-primary progress-btn" id="next-btn" onclick="nextTopic()">下一个 →</button>
+    </div>
+  </div>
+
+  <script src="wordData-detailed.js"></script>
+  <script>
+    let currentIndex = 0;
+    const data = WordRootsDetailed;
+
+    function renderNav() {
+      const nav = document.getElementById('topic-nav');
+      nav.innerHTML = data.map((item, i) => 
+        '<div class="detail-nav-item ' + (i === currentIndex ? 'active' : '') + '" onclick="goTo(' + i + ')">' + item.root + '</div>'
+      ).join('');
+    }
+
+    function renderContent() {
+      const item = data[currentIndex];
+      const area = document.getElementById('content-area');
+      
+      area.innerHTML = `
+        <div class="detail-card">
+          <div style="padding: 1.5rem; border-bottom: 1px solid var(--border);">
+            <div class="detail-title">${item.root}</div>
+            <div class="detail-meaning">${item.meaning}</div>
+            <span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--bg); border-radius: 20px; font-size: 0.85rem; color: var(--text-secondary);">
+              ${item.origin}
+            </span>
+          </div>
+
+          <div class="detail-section expanded" data-section="why">
+            <div class="detail-section-header" onclick="toggleSection('why')">
+              <div class="detail-section-title">
+                <span class="detail-section-icon">🤔</span>
+                <span>为什么需要？</span>
+              </div>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="detail-section-content">
+              <div class="detail-content">${formatContent(item.why)}</div>
+            </div>
+          </div>
+
+          <div class="detail-section" data-section="deepdive">
+            <div class="detail-section-header" onclick="toggleSection('deepdive')">
+              <div class="detail-section-title">
+                <span class="detail-section-icon">📖</span>
+                <span>深入讲解</span>
+              </div>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="detail-section-content">
+              <div class="detail-content">${formatContent(item.deepDive)}</div>
+            </div>
+          </div>
+
+          <div class="detail-section" data-section="tips">
+            <div class="detail-section-header" onclick="toggleSection('tips')">
+              <div class="detail-section-title">
+                <span class="detail-section-icon">💡</span>
+                <span>面试技巧</span>
+              </div>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="detail-section-content">
+              <div class="detail-content">
+                <ul>
+                  ${item.interviewTips.map(tip => '<li>' + tip + '</li>').join('')}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-section" data-section="example">
+            <div class="detail-section-header" onclick="toggleSection('example')">
+              <div class="detail-section-title">
+                <span class="detail-section-icon">🏢</span>
+                <span>实际案例</span>
+              </div>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="detail-section-content">
+              <div class="detail-content">${formatContent(item.realWorldExample)}</div>
+            </div>
+          </div>
+
+          <div class="detail-section" data-section="quick">
+            <div class="detail-section-header" onclick="toggleSection('quick')">
+              <div class="detail-section-title">
+                <span class="detail-section-icon">⚡</span>
+                <span>快速记忆</span>
+              </div>
+              <span class="expand-icon">▼</span>
+            </div>
+            <div class="detail-section-content">
+              <ul class="examples-list">
+                ${item.examples.map(ex => '<li>' + ex + '</li>').join('')}
+              </ul>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('progress-text').textContent = (currentIndex + 1) + ' / ' + data.length;
+      document.getElementById('prev-btn').disabled = currentIndex === 0;
+      document.getElementById('next-btn').disabled = currentIndex === data.length - 1;
+      
+      renderNav();
+    }
+
+    function formatContent(text) {
+      if (!text) return '';
+      return text
+        .replace(/\n### (.*)/g, '<h3>$1</h3>')
+        .replace(/\n#### (.*)/g, '<h4>$1</h4>')
+        .replace(/\n---/g, '<hr>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>')
+        .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+        .replace(/\n• /g, '\n<li>')
+        .replace(/\n- /g, '\n<li>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^\s+/, '')
+        .replace(/\s+$/, '');
+    }
+
+    function toggleSection(section) {
+      const el = document.querySelector('[data-section="' + section + '"]');
+      el.classList.toggle('expanded');
+    }
+
+    function goTo(index) {
+      currentIndex = index;
+      renderContent();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function prevTopic() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderContent();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function nextTopic() {
+      if (currentIndex < data.length - 1) {
+        currentIndex++;
+        renderContent();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // 键盘导航
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prevTopic();
+      if (e.key === 'ArrowRight') nextTopic();
+    });
+
+    // 初始化
+    renderContent();
+  </script>
+  <script src="js/shortcuts.js"></script>
+</body>
+</html>
