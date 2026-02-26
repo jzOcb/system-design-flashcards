@@ -75,6 +75,19 @@
       font-size: 0.9rem;
       color: var(--text-secondary);
     }
+    .lang-btn {
+      padding: 0.4rem 0.8rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      color: var(--text);
+      margin-left: 1rem;
+    }
+    .lang-btn:hover {
+      background: var(--bg);
+    }
   </style>
 </head>
 <body>
@@ -83,10 +96,9 @@
     <div class="nav-links">
       <a href="learn.html">学习</a>
       <a href="flashcard.html" class="active">闪卡</a>
-      <a href="behavioral.html">Behavioral</a>
       <a href="quiz.html">Quiz</a>
-      <a href="roots.html">索引</a>
-      <a href="progress.html">进度</a>
+      <a href="deepdive.html">深入</a>
+      <a href="flashcard-en.html" class="lang-btn">🇺🇸 EN</a>
     </div>
   </nav>
 
@@ -185,7 +197,6 @@
         currentIndex++;
         render();
       } else {
-        // 循环到开头
         currentIndex = 0;
         render();
       }
@@ -206,6 +217,5 @@
 
     render();
   </script>
-<a href="flashcard-en.html" class="lang-toggle">🇺🇸 English</a>
 </body>
 </html>

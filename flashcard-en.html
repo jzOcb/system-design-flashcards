@@ -75,18 +75,17 @@
       font-size: 0.9rem;
       color: var(--text-secondary);
     }
-    .lang-toggle {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.5rem 1rem;
+    .lang-btn {
+      padding: 0.4rem 0.8rem;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
+      font-size: 0.8rem;
+      text-decoration: none;
+      color: var(--text);
+      margin-left: 1rem;
     }
-    .lang-toggle:hover {
+    .lang-btn:hover {
       background: var(--bg);
     }
   </style>
@@ -95,15 +94,13 @@
   <nav class="nav">
     <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
     <div class="nav-links">
-      <a href="learn-en.html">Learn</a>
+      <a href="learn.html">Learn</a>
       <a href="flashcard-en.html" class="active">Flashcards</a>
-      <a href="roots-en.html">Index</a>
-      <a href="deepdive-en.html">Deep Dive</a>
-      <a href="progress-en.html">Progress</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="deepdive.html">Deep Dive</a>
+      <a href="flashcard.html" class="lang-btn">🇨🇳 中文</a>
     </div>
   </nav>
-
-  <a href="flashcard.html" class="lang-toggle">🇨🇳 中文</a>
 
   <div class="flashcard-container" style="max-width: 650px;">
     <div class="mode-selector" id="modes">

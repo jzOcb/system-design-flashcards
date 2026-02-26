@@ -6,24 +6,30 @@
   <title>System Design Interview Prep | 30 Core Concepts</title>
   <meta name="description" content="Master System Design interviews with 30 core concepts from Hello Interview's FAANG-focused tutorials">
   <link rel="stylesheet" href="css/minimal.css">
-  <link rel="manifest" href="manifest.json">
   <style>
-    .lang-toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      padding: 0.5rem 1rem;
+    .lang-btn {
+      padding: 0.4rem 0.8rem;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 20px;
-      font-size: 0.85rem;
-      cursor: pointer;
-      z-index: 100;
+      font-size: 0.8rem;
       text-decoration: none;
       color: var(--text);
+      margin-left: 1rem;
     }
-    .lang-toggle:hover {
+    .lang-btn:hover {
       background: var(--bg);
+    }
+    .abbr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .abbr-item {
+      padding: 0.5rem;
+      background: var(--bg);
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -31,15 +37,13 @@
   <nav class="nav">
     <div class="nav-brand">SD Interview Prep</div>
     <div class="nav-links">
-      <a href="learn-en.html">Learn</a>
+      <a href="learn.html">Learn</a>
       <a href="flashcard-en.html">Flashcards</a>
-      <a href="roots-en.html">Index</a>
-      <a href="deepdive-en.html">Deep Dive</a>
-      <a href="progress-en.html">Progress</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="deepdive.html">Deep Dive</a>
+      <a href="index.html" class="lang-btn">🇨🇳 中文</a>
     </div>
   </nav>
-
-  <a href="index.html" class="lang-toggle">🇨🇳 中文</a>
 
   <main class="hero">
     <div class="hero-content">
@@ -54,7 +58,7 @@
         From API Design to Kafka — everything you need to know
       </p>
       <div class="hero-cta">
-        <a href="learn-en.html" class="btn btn-primary">Start Learning →</a>
+        <a href="learn.html" class="btn btn-primary">Start Learning →</a>
         <a href="flashcard-en.html" class="btn btn-secondary">Flashcard Review</a>
       </div>
     </div>
@@ -78,7 +82,7 @@
   <section class="categories">
     <h2>Learning Modules</h2>
     <div class="category-grid">
-      <div class="category-card" onclick="location.href='learn-en.html'">
+      <div class="category-card" onclick="location.href='learn.html'">
         <div class="category-icon">📖</div>
         <div class="category-name">Progressive Learning</div>
         <div class="category-count">30 concept cards</div>
@@ -86,34 +90,34 @@
       <div class="category-card" onclick="location.href='flashcard-en.html'">
         <div class="category-icon">🎴</div>
         <div class="category-name">Interview Flashcards</div>
-        <div class="category-count">30 Q&A with full explanations</div>
+        <div class="category-count">30 Q&A with explanations</div>
       </div>
-      <div class="category-card" onclick="location.href='quiz-en.html'">
+      <div class="category-card" onclick="location.href='quiz.html'">
         <div class="category-icon">✅</div>
         <div class="category-name">Quiz Mode</div>
         <div class="category-count">Test your knowledge</div>
       </div>
-      <div class="category-card" onclick="location.href='cases-en.html'">
+      <div class="category-card" onclick="location.href='cases.html'">
         <div class="category-icon">🏗️</div>
         <div class="category-name">Design Cases</div>
         <div class="category-count">12 classic problems</div>
       </div>
-      <div class="category-card" onclick="location.href='deepdive-en.html'">
+      <div class="category-card" onclick="location.href='deepdive.html'">
         <div class="category-icon">🔬</div>
         <div class="category-name">Deep Dive</div>
         <div class="category-count">5 core components</div>
       </div>
-      <div class="category-card" onclick="location.href='behavioral-en.html'">
+      <div class="category-card" onclick="location.href='behavioral.html'">
         <div class="category-icon">💬</div>
         <div class="category-name">Behavioral Prep</div>
         <div class="category-count">STAR story templates</div>
       </div>
-      <div class="category-card" onclick="location.href='calculator-en.html'">
+      <div class="category-card" onclick="location.href='calculator.html'">
         <div class="category-icon">🧮</div>
         <div class="category-name">Estimation Calculator</div>
         <div class="category-count">QPS / Storage / Bandwidth</div>
       </div>
-      <div class="category-card" onclick="location.href='progress-en.html'">
+      <div class="category-card" onclick="location.href='progress.html'">
         <div class="category-icon">📊</div>
         <div class="category-name">Track Progress</div>
         <div class="category-count">Monitor your learning</div>
@@ -124,29 +128,31 @@
   <section class="categories" style="margin-top: 3rem;">
     <h2>Abbreviation Reference</h2>
     <div style="background: var(--card-bg); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);">
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; font-size: 0.9rem;">
-        <div><strong>ACID</strong> — Atomicity, Consistency, Isolation, Durability</div>
-        <div><strong>API</strong> — Application Programming Interface</div>
-        <div><strong>APM</strong> — Application Performance Monitoring</div>
-        <div><strong>CAP</strong> — Consistency, Availability, Partition tolerance</div>
-        <div><strong>CDN</strong> — Content Delivery Network</div>
-        <div><strong>CQRS</strong> — Command Query Responsibility Segregation</div>
-        <div><strong>CRUD</strong> — Create, Read, Update, Delete</div>
-        <div><strong>DAU</strong> — Daily Active Users</div>
-        <div><strong>DLQ</strong> — Dead Letter Queue</div>
-        <div><strong>ES</strong> — Elasticsearch</div>
-        <div><strong>gRPC</strong> — Google Remote Procedure Call</div>
-        <div><strong>KV</strong> — Key-Value</div>
-        <div><strong>LB</strong> — Load Balancer</div>
-        <div><strong>NFR</strong> — Non-Functional Requirement</div>
-        <div><strong>QPS</strong> — Queries Per Second</div>
-        <div><strong>REST</strong> — Representational State Transfer</div>
-        <div><strong>RPC</strong> — Remote Procedure Call</div>
-        <div><strong>SQL</strong> — Structured Query Language</div>
-        <div><strong>STAR</strong> — Situation, Task, Action, Result</div>
-        <div><strong>TCC</strong> — Try-Confirm-Cancel</div>
-        <div><strong>TTL</strong> — Time To Live</div>
-        <div><strong>2PC</strong> — Two-Phase Commit</div>
+      <div class="abbr-grid">
+        <div class="abbr-item"><strong>ACID</strong> — Atomicity, Consistency, Isolation, Durability</div>
+        <div class="abbr-item"><strong>API</strong> — Application Programming Interface</div>
+        <div class="abbr-item"><strong>APM</strong> — Application Performance Monitoring</div>
+        <div class="abbr-item"><strong>CAP</strong> — Consistency, Availability, Partition tolerance</div>
+        <div class="abbr-item"><strong>CDN</strong> — Content Delivery Network</div>
+        <div class="abbr-item"><strong>CQRS</strong> — Command Query Responsibility Segregation</div>
+        <div class="abbr-item"><strong>CRUD</strong> — Create, Read, Update, Delete</div>
+        <div class="abbr-item"><strong>DAU</strong> — Daily Active Users</div>
+        <div class="abbr-item"><strong>DLQ</strong> — Dead Letter Queue</div>
+        <div class="abbr-item"><strong>DP</strong> — Dynamic Programming</div>
+        <div class="abbr-item"><strong>ES</strong> — Elasticsearch</div>
+        <div class="abbr-item"><strong>gRPC</strong> — Google Remote Procedure Call</div>
+        <div class="abbr-item"><strong>KV</strong> — Key-Value</div>
+        <div class="abbr-item"><strong>LB</strong> — Load Balancer</div>
+        <div class="abbr-item"><strong>LRU</strong> — Least Recently Used</div>
+        <div class="abbr-item"><strong>NFR</strong> — Non-Functional Requirement</div>
+        <div class="abbr-item"><strong>QPS</strong> — Queries Per Second</div>
+        <div class="abbr-item"><strong>REST</strong> — Representational State Transfer</div>
+        <div class="abbr-item"><strong>RPC</strong> — Remote Procedure Call</div>
+        <div class="abbr-item"><strong>SQL</strong> — Structured Query Language</div>
+        <div class="abbr-item"><strong>STAR</strong> — Situation, Task, Action, Result</div>
+        <div class="abbr-item"><strong>TCC</strong> — Try-Confirm-Cancel</div>
+        <div class="abbr-item"><strong>TTL</strong> — Time To Live</div>
+        <div class="abbr-item"><strong>2PC</strong> — Two-Phase Commit</div>
       </div>
     </div>
   </section>
