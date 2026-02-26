@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz 测试 | System Design 面试速成</title>
+  <meta name="description" content="通过 30 道测试题检验你的 System Design 知识掌握程度">
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .quiz-container {
+      max-width: 800px;
+      margin: 80px auto 40px;
+      padding: 0 20px;
+    }
+
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .quiz-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .quiz-stats {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .quiz-progress {
+      width: 100%;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    .quiz-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      transition: width 0.3s ease;
+    }
+
+    .question-card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .question-number {
+      font-size: 0.9rem;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .question-text {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .option {
+      padding: 15px 20px;
+      margin-bottom: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .option:hover {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .option.selected {
+      border-color: #667eea;
+      background: #f8f9ff;
+    }
+
+    .option.correct {
+      border-color: #10b981;
+      background: #ecfdf5;
+      color: #065f46;
+    }
+
+    .option.wrong {
+      border-color: #ef4444;
+      background: #fef2f2;
+      color: #991b1b;
+    }
+
+    .option.disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+    }
+
+    .btn-secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #d0d0d0;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .result-card {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .result-score {
+      font-size: 4rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 20px 0;
+    }
+
+    .result-message {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .result-details {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 20px 0;
+    }
+
+    .result-actions {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .explanation {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f9ff;
+      border-left: 4px solid #667eea;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .concept-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #e0e7ff;
+      color: #667eea;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">SD 面试速成</div>
+    <div class="nav-links">
+      <a href="index.html">首页</a>
+      <a href="learn.html">学习</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="progress.html">进度</a>
+    </div>
+  </nav>
+
+  <div class="quiz-container">
+    <!-- Quiz Header -->
+    <div class="quiz-header" id="quizHeader">
+      <h1>📝 System Design Quiz</h1>
+      <p>测试你的系统设计知识掌握程度</p>
+      <div class="quiz-stats">
+        <span>共 <strong id="totalQuestions">30</strong> 题</span>
+        <span>已答 <strong id="answeredCount">0</strong> 题</span>
+        <span>正确 <strong id="correctCount">0</strong> 题</span>
+      </div>
+      <div class="quiz-progress">
+        <div class="quiz-progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+
+    <!-- Question Container -->
+    <div id="questionContainer"></div>
+
+    <!-- Quiz Actions -->
+    <div class="quiz-actions" id="quizActions">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">← 上一题</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">下一题 →</button>
+      <button class="btn btn-primary hidden" id="submitBtn" onclick="submitQuiz()">提交答案</button>
+    </div>
+
+    <!-- Result Container -->
+    <div id="resultContainer" class="hidden"></div>
+  </div>
+
+  <script src="wordData.js"></script>
+  <script>
+    let currentQuestion = 0;
+    let userAnswers = [];
+    let quizData = [];
+    let score = 0;
+
+    // 初始化测试
+    function initQuiz() {
+      // 从 WordRoots 提取所有 quiz 数据
+      quizData = WordRoots.filter(item => item.quiz).map((item, index) => ({
+        id: item.id,
+        root: item.root,
+        origin: item.origin,
+        description: item.description,
+        ...item.quiz
+      }));
+
+      // 随机打乱题目顺序
+      quizData = shuffleArray(quizData);
+      
+      userAnswers = new Array(quizData.length).fill(null);
+      
+      document.getElementById('totalQuestions').textContent = quizData.length;
+      
+      renderQuestion();
+      updateProgress();
+    }
+
+    // 洗牌算法
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // 渲染问题
+    function renderQuestion() {
+      const q = quizData[currentQuestion];
+      const isAnswered = userAnswers[currentQuestion] !== null;
+      
+      const html = `
+        <div class="question-card">
+          <div class="question-number">第 ${currentQuestion + 1} 题 / ${quizData.length}</div>
+          <div class="concept-tag">${q.origin} · ${q.root}</div>
+          <div class="question-text">${q.question}</div>
+          <div class="options">
+            ${q.options.map((option, index) => {
+              let className = 'option';
+              if (isAnswered) {
+                className += ' disabled';
+                if (index === userAnswers[currentQuestion]) {
+                  className += index === q.correctAnswer ? ' correct' : ' wrong';
+                }
+                if (index === q.correctAnswer && index !== userAnswers[currentQuestion]) {
+                  className += ' correct';
+                }
+              } else if (userAnswers[currentQuestion] === index) {
+                className += ' selected';
+              }
+              return `
+                <div class="${className}" onclick="selectAnswer(${index})">
+                  ${String.fromCharCode(65 + index)}. ${option}
+                </div>
+              `;
+            }).join('')}
+          </div>
+          ${isAnswered ? `
+            <div class="explanation">
+              <strong>💡 解释：</strong><br>
+              ${q.description}
+            </div>
+          ` : ''}
+        </div>
+      `;
+      
+      document.getElementById('questionContainer').innerHTML = html;
+      updateButtons();
+    }
+
+    // 选择答案
+    function selectAnswer(optionIndex) {
+      if (userAnswers[currentQuestion] !== null) return; // 已答过
+      
+      userAnswers[currentQuestion] = optionIndex;
+      
+      // 检查答案
+      const q = quizData[currentQuestion];
+      if (optionIndex === q.correctAnswer) {
+        score++;
+      }
+      
+      renderQuestion();
+      updateProgress();
+    }
+
+    // 上一题
+    function prevQuestion() {
+      if (currentQuestion > 0) {
+        currentQuestion--;
+        renderQuestion();
+      }
+    }
+
+    // 下一题
+    function nextQuestion() {
+      if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        renderQuestion();
+      }
+    }
+
+    // 更新按钮状态
+    function updateButtons() {
+      document.getElementById('prevBtn').disabled = currentQuestion === 0;
+      document.getElementById('nextBtn').disabled = currentQuestion === quizData.length - 1;
+      
+      const answeredAll = userAnswers.every(a => a !== null);
+      if (answeredAll) {
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('submitBtn').classList.remove('hidden');
+      }
+    }
+
+    // 更新进度
+    function updateProgress() {
+      const answered = userAnswers.filter(a => a !== null).length;
+      const progress = (answered / quizData.length) * 100;
+      
+      document.getElementById('answeredCount').textContent = answered;
+      document.getElementById('correctCount').textContent = score;
+      document.getElementById('progressBar').style.width = progress + '%';
+      
+      updateButtons();
+    }
+
+    // 提交测试
+    function submitQuiz() {
+      const percentage = Math.round((score / quizData.length) * 100);
+      let message = '';
+      let emoji = '';
+      
+      if (percentage >= 90) {
+        message = '优秀！系统设计大师！';
+        emoji = '🏆';
+      } else if (percentage >= 80) {
+        message = '很好！继续保持！';
+        emoji = '🎉';
+      } else if (percentage >= 70) {
+        message = '不错！还有进步空间';
+        emoji = '👍';
+      } else if (percentage >= 60) {
+        message = '及格！需要加强学习';
+        emoji = '📚';
+      } else {
+        message = '加油！多看几遍视频吧';
+        emoji = '💪';
+      }
+      
+      const resultHTML = `
+        <div class="result-card">
+          <div style="font-size: 3rem;">${emoji}</div>
+          <div class="result-score">${percentage}%</div>
+          <div class="result-message">${message}</div>
+          <div class="result-details">
+            正确 ${score} 题 / 共 ${quizData.length} 题
+          </div>
+          <div class="result-actions">
+            <button class="btn btn-primary" onclick="location.reload()">重新测试</button>
+            <button class="btn btn-secondary" onclick="reviewWrong()">查看错题</button>
+            <a href="learn.html" class="btn btn-secondary">回到学习</a>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('quizHeader').classList.add('hidden');
+      document.getElementById('questionContainer').classList.add('hidden');
+      document.getElementById('quizActions').classList.add('hidden');
+      document.getElementById('resultContainer').innerHTML = resultHTML;
+      document.getElementById('resultContainer').classList.remove('hidden');
+      
+      // 保存进度
+      saveProgress();
+    }
+
+    // 查看错题
+    function reviewWrong() {
+      currentQuestion = userAnswers.findIndex((answer, index) => 
+        answer !== null && answer !== quizData[index].correctAnswer
+      );
+      
+      if (currentQuestion === -1) {
+        alert('恭喜！没有错题 🎉');
+        return;
+      }
+      
+      document.getElementById('quizHeader').classList.remove('hidden');
+      document.getElementById('questionContainer').classList.remove('hidden');
+      document.getElementById('quizActions').classList.remove('hidden');
+      document.getElementById('resultContainer').classList.add('hidden');
+      
+      renderQuestion();
+    }
+
+    // 保存进度
+    function saveProgress() {
+      try {
+        const progress = JSON.parse(localStorage.getItem('sd-progress') || '{}');
+        progress.lastQuizScore = score;
+        progress.lastQuizTotal = quizData.length;
+        progress.lastQuizDate = new Date().toISOString();
+        localStorage.setItem('sd-progress', JSON.stringify(progress));
+      } catch (e) {
+        console.error('保存进度失败', e);
+      }
+    }
+
+    // 页面加载时初始化
+    initQuiz();
+  </script>
+</body>
+</html>
