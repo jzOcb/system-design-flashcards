@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Design Interview Prep | 30 Core Concepts</title>
+  <meta name="description" content="Master System Design interviews with 30 core concepts from Hello Interview's FAANG-focused tutorials">
+  <link rel="stylesheet" href="css/minimal.css">
+  <link rel="manifest" href="manifest.json">
+  <style>
+    .lang-toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      z-index: 100;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .lang-toggle:hover {
+      background: var(--bg);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">SD Interview Prep</div>
+    <div class="nav-links">
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html">Flashcards</a>
+      <a href="roots-en.html">Index</a>
+      <a href="deepdive-en.html">Deep Dive</a>
+      <a href="progress-en.html">Progress</a>
+    </div>
+  </nav>
+
+  <a href="index.html" class="lang-toggle">🇨🇳 中文</a>
+
+  <main class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span>30 Core Concepts</span>
+        <span>to Ace Your</span>
+        <span class="highlight">System Design</span>
+        <span>Interview</span>
+      </h1>
+      <p class="hero-subtitle">
+        Curated from Hello Interview's FAANG interviewer tutorials<br>
+        From API Design to Kafka — everything you need to know
+      </p>
+      <div class="hero-cta">
+        <a href="learn-en.html" class="btn btn-primary">Start Learning →</a>
+        <a href="flashcard-en.html" class="btn btn-secondary">Flashcard Review</a>
+      </div>
+    </div>
+  </main>
+
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-value">30</div>
+      <div class="stat-label">Core Concepts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">53</div>
+      <div class="stat-label">Source Videos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">8</div>
+      <div class="stat-label">Learning Modules</div>
+    </div>
+  </section>
+
+  <section class="categories">
+    <h2>Learning Modules</h2>
+    <div class="category-grid">
+      <div class="category-card" onclick="location.href='learn-en.html'">
+        <div class="category-icon">📖</div>
+        <div class="category-name">Progressive Learning</div>
+        <div class="category-count">30 concept cards</div>
+      </div>
+      <div class="category-card" onclick="location.href='flashcard-en.html'">
+        <div class="category-icon">🎴</div>
+        <div class="category-name">Interview Flashcards</div>
+        <div class="category-count">30 Q&A with full explanations</div>
+      </div>
+      <div class="category-card" onclick="location.href='quiz-en.html'">
+        <div class="category-icon">✅</div>
+        <div class="category-name">Quiz Mode</div>
+        <div class="category-count">Test your knowledge</div>
+      </div>
+      <div class="category-card" onclick="location.href='cases-en.html'">
+        <div class="category-icon">🏗️</div>
+        <div class="category-name">Design Cases</div>
+        <div class="category-count">12 classic problems</div>
+      </div>
+      <div class="category-card" onclick="location.href='deepdive-en.html'">
+        <div class="category-icon">🔬</div>
+        <div class="category-name">Deep Dive</div>
+        <div class="category-count">5 core components</div>
+      </div>
+      <div class="category-card" onclick="location.href='behavioral-en.html'">
+        <div class="category-icon">💬</div>
+        <div class="category-name">Behavioral Prep</div>
+        <div class="category-count">STAR story templates</div>
+      </div>
+      <div class="category-card" onclick="location.href='calculator-en.html'">
+        <div class="category-icon">🧮</div>
+        <div class="category-name">Estimation Calculator</div>
+        <div class="category-count">QPS / Storage / Bandwidth</div>
+      </div>
+      <div class="category-card" onclick="location.href='progress-en.html'">
+        <div class="category-icon">📊</div>
+        <div class="category-name">Track Progress</div>
+        <div class="category-count">Monitor your learning</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories" style="margin-top: 3rem;">
+    <h2>Abbreviation Reference</h2>
+    <div style="background: var(--card-bg); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);">
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; font-size: 0.9rem;">
+        <div><strong>ACID</strong> — Atomicity, Consistency, Isolation, Durability</div>
+        <div><strong>API</strong> — Application Programming Interface</div>
+        <div><strong>APM</strong> — Application Performance Monitoring</div>
+        <div><strong>CAP</strong> — Consistency, Availability, Partition tolerance</div>
+        <div><strong>CDN</strong> — Content Delivery Network</div>
+        <div><strong>CQRS</strong> — Command Query Responsibility Segregation</div>
+        <div><strong>CRUD</strong> — Create, Read, Update, Delete</div>
+        <div><strong>DAU</strong> — Daily Active Users</div>
+        <div><strong>DLQ</strong> — Dead Letter Queue</div>
+        <div><strong>ES</strong> — Elasticsearch</div>
+        <div><strong>gRPC</strong> — Google Remote Procedure Call</div>
+        <div><strong>KV</strong> — Key-Value</div>
+        <div><strong>LB</strong> — Load Balancer</div>
+        <div><strong>NFR</strong> — Non-Functional Requirement</div>
+        <div><strong>QPS</strong> — Queries Per Second</div>
+        <div><strong>REST</strong> — Representational State Transfer</div>
+        <div><strong>RPC</strong> — Remote Procedure Call</div>
+        <div><strong>SQL</strong> — Structured Query Language</div>
+        <div><strong>STAR</strong> — Situation, Task, Action, Result</div>
+        <div><strong>TCC</strong> — Try-Confirm-Cancel</div>
+        <div><strong>TTL</strong> — Time To Live</div>
+        <div><strong>2PC</strong> — Two-Phase Commit</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p class="footer-tagline">Interviews aren't about memorizing — they're about explaining trade-offs</p>
+    <p class="footer-desc">
+      Built from 53 Hello Interview videos covering System Design fundamentals.
+      From basic concepts to classic problems, from database deep dives to interview tips.
+    </p>
+    <p class="footer-source">
+      Content source: <a href="https://www.youtube.com/@hello_interview" target="_blank">Hello Interview</a>
+    </p>
+  </footer>
+</body>
+</html>

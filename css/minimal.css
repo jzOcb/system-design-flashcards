@@ -600,3 +600,22 @@ body {
     align-items: center;
   }
 }
+
+/* Language toggle */
+.lang-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  z-index: 100;
+  text-decoration: none;
+  color: var(--text);
+}
+.lang-toggle:hover {
+  background: var(--bg);
+}

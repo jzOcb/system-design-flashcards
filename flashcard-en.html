@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>闪卡 | System Design 面试速成</title>
+  <title>Flashcards | System Design Interview Prep</title>
   <link rel="stylesheet" href="css/minimal.css">
   <style>
     .flashcard {
       height: auto;
-      min-height: 350px;
+      min-height: 400px;
     }
     .flashcard-front, .flashcard-back {
       padding: 2rem;
       height: auto;
-      min-height: 350px;
+      min-height: 400px;
     }
     .flashcard-question {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
       line-height: 1.4;
       margin-bottom: 1rem;
@@ -31,7 +31,7 @@
       display: inline-block;
     }
     .flashcard-answer {
-      font-size: 1rem;
+      font-size: 0.95rem;
       line-height: 1.8;
       text-align: left;
       white-space: pre-line;
@@ -44,8 +44,8 @@
       color: var(--text-secondary);
     }
     .flashcard-back {
-      background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
-      color: #1F2937;
+      background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+      color: white;
     }
     .mode-selector {
       display: flex;
@@ -75,42 +75,58 @@
       font-size: 0.9rem;
       color: var(--text-secondary);
     }
+    .lang-toggle {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      padding: 0.5rem 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .lang-toggle:hover {
+      background: var(--bg);
+    }
   </style>
 </head>
 <body>
   <nav class="nav">
-    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
     <div class="nav-links">
-      <a href="learn.html">学习</a>
-      <a href="flashcard.html" class="active">闪卡</a>
-      <a href="behavioral.html">Behavioral</a>
-      <a href="quiz.html">Quiz</a>
-      <a href="roots.html">索引</a>
-      <a href="progress.html">进度</a>
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html" class="active">Flashcards</a>
+      <a href="roots-en.html">Index</a>
+      <a href="deepdive-en.html">Deep Dive</a>
+      <a href="progress-en.html">Progress</a>
     </div>
   </nav>
 
-  <div class="flashcard-container" style="max-width: 600px;">
+  <a href="flashcard.html" class="lang-toggle">🇨🇳 中文</a>
+
+  <div class="flashcard-container" style="max-width: 650px;">
     <div class="mode-selector" id="modes">
-      <button class="mode-btn active" data-mode="all" onclick="setMode('all')">全部</button>
-      <button class="mode-btn" data-mode="权衡决策" onclick="setMode('权衡决策')">权衡决策</button>
-      <button class="mode-btn" data-mode="数字估算" onclick="setMode('数字估算')">数字估算</button>
-      <button class="mode-btn" data-mode="场景判断" onclick="setMode('场景判断')">场景判断</button>
-      <button class="mode-btn" data-mode="设计题" onclick="setMode('设计题')">设计题</button>
-      <button class="mode-btn" data-mode="面试技巧" onclick="setMode('面试技巧')">面试技巧</button>
+      <button class="mode-btn active" data-mode="all" onclick="setMode('all')">All</button>
+      <button class="mode-btn" data-mode="Trade-offs" onclick="setMode('Trade-offs')">Trade-offs</button>
+      <button class="mode-btn" data-mode="Estimation" onclick="setMode('Estimation')">Estimation</button>
+      <button class="mode-btn" data-mode="Scenarios" onclick="setMode('Scenarios')">Scenarios</button>
+      <button class="mode-btn" data-mode="Components" onclick="setMode('Components')">Components</button>
+      <button class="mode-btn" data-mode="Design Problems" onclick="setMode('Design Problems')">Design</button>
+      <button class="mode-btn" data-mode="Interview Tips" onclick="setMode('Interview Tips')">Tips</button>
     </div>
 
     <div class="stats-bar">
       <span id="progress-text">1 / 30</span>
-      <span id="category-text">权衡决策</span>
+      <span id="category-text">Trade-offs</span>
     </div>
     
     <div class="flashcard" id="flashcard" onclick="flip()">
       <div class="flashcard-inner">
         <div class="flashcard-front">
-          <div class="flashcard-category" id="category">权衡决策</div>
-          <div class="flashcard-question" id="question">什么时候选 SQL，什么时候选 NoSQL？</div>
-          <div class="flashcard-hint">点击查看答案 💡</div>
+          <div class="flashcard-category" id="category">Trade-offs</div>
+          <div class="flashcard-question" id="question">When to use SQL vs NoSQL?</div>
+          <div class="flashcard-hint">Click to reveal answer 💡</div>
         </div>
         <div class="flashcard-back">
           <div class="flashcard-answer" id="answer">...</div>
@@ -120,20 +136,20 @@
     </div>
 
     <div class="flashcard-nav">
-      <button class="btn btn-secondary" onclick="prev()">← 上一题</button>
-      <button class="btn btn-secondary" onclick="shuffle()">🔀 随机</button>
-      <button class="btn btn-primary" onclick="next()">下一题 →</button>
+      <button class="btn btn-secondary" onclick="prev()">← Previous</button>
+      <button class="btn btn-secondary" onclick="shuffle()">🔀 Shuffle</button>
+      <button class="btn btn-primary" onclick="next()">Next →</button>
     </div>
 
     <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-size: 0.85rem;">
-      快捷键：← → 切换，空格 翻转，R 随机
+      Hotkeys: ← → navigate, Space to flip, R to shuffle
     </p>
   </div>
 
-  <script src="flashcardData.js"></script>
+  <script src="flashcardData-en.js"></script>
   <script>
-    let allCards = [...FlashcardData];
-    let cards = [...FlashcardData];
+    let allCards = [...FlashcardDataEN];
+    let cards = [...FlashcardDataEN];
     let currentIndex = 0;
     let currentMode = 'all';
 
@@ -155,7 +171,7 @@
 
     function render() {
       if (cards.length === 0) {
-        document.getElementById('question').textContent = '没有匹配的卡片';
+        document.getElementById('question').textContent = 'No cards in this category';
         return;
       }
       
@@ -185,7 +201,6 @@
         currentIndex++;
         render();
       } else {
-        // 循环到开头
         currentIndex = 0;
         render();
       }
@@ -206,6 +221,5 @@
 
     render();
   </script>
-<a href="flashcard-en.html" class="lang-toggle">🇺🇸 English</a>
 </body>
 </html>
