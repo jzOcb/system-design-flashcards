@@ -27,9 +27,102 @@
       font-size: 0.9rem;
     }
     .abbr-item {
-      padding: 0.5rem;
+      padding: 0.75rem;
       background: var(--bg);
-      border-radius: 6px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .abbr-item:hover {
+      background: var(--card-bg);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .abbr-item strong {
+      color: var(--primary-dark);
+    }
+    /* Popup Modal */
+    .abbr-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+    }
+    .abbr-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .abbr-modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      transform: scale(0.9);
+      transition: transform 0.2s;
+    }
+    .abbr-modal.active .abbr-modal-content {
+      transform: scale(1);
+    }
+    .abbr-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .abbr-modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .abbr-modal-full {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+    .abbr-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: var(--text-secondary);
+    }
+    .abbr-modal-close:hover {
+      color: var(--text);
+    }
+    .abbr-modal-body {
+      line-height: 1.8;
+    }
+    .abbr-modal-body h4 {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .abbr-modal-body ul {
+      padding-left: 1.5rem;
+      margin: 0.5rem 0;
+    }
+    .abbr-modal-body li {
+      margin-bottom: 0.25rem;
+    }
+    .abbr-modal-body code {
+      background: var(--bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9em;
     }
   </style>
 </head>
@@ -131,35 +224,450 @@
 
   <section class="categories" style="margin-top: 3rem;">
     <h2>Abbreviation Reference</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Click any term for detailed explanation</p>
     <div style="background: var(--card-bg); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);">
-      <div class="abbr-grid">
-        <div class="abbr-item"><strong>ACID</strong> — Atomicity, Consistency, Isolation, Durability</div>
-        <div class="abbr-item"><strong>API</strong> — Application Programming Interface</div>
-        <div class="abbr-item"><strong>APM</strong> — Application Performance Monitoring</div>
-        <div class="abbr-item"><strong>CAP</strong> — Consistency, Availability, Partition tolerance</div>
-        <div class="abbr-item"><strong>CDN</strong> — Content Delivery Network</div>
-        <div class="abbr-item"><strong>CQRS</strong> — Command Query Responsibility Segregation</div>
-        <div class="abbr-item"><strong>CRUD</strong> — Create, Read, Update, Delete</div>
-        <div class="abbr-item"><strong>DAU</strong> — Daily Active Users</div>
-        <div class="abbr-item"><strong>DLQ</strong> — Dead Letter Queue</div>
-        <div class="abbr-item"><strong>DP</strong> — Dynamic Programming</div>
-        <div class="abbr-item"><strong>ES</strong> — Elasticsearch</div>
-        <div class="abbr-item"><strong>gRPC</strong> — Google Remote Procedure Call</div>
-        <div class="abbr-item"><strong>KV</strong> — Key-Value</div>
-        <div class="abbr-item"><strong>LB</strong> — Load Balancer</div>
-        <div class="abbr-item"><strong>LRU</strong> — Least Recently Used</div>
-        <div class="abbr-item"><strong>NFR</strong> — Non-Functional Requirement</div>
-        <div class="abbr-item"><strong>QPS</strong> — Queries Per Second</div>
-        <div class="abbr-item"><strong>REST</strong> — Representational State Transfer</div>
-        <div class="abbr-item"><strong>RPC</strong> — Remote Procedure Call</div>
-        <div class="abbr-item"><strong>SQL</strong> — Structured Query Language</div>
-        <div class="abbr-item"><strong>STAR</strong> — Situation, Task, Action, Result</div>
-        <div class="abbr-item"><strong>TCC</strong> — Try-Confirm-Cancel</div>
-        <div class="abbr-item"><strong>TTL</strong> — Time To Live</div>
-        <div class="abbr-item"><strong>2PC</strong> — Two-Phase Commit</div>
+      <div class="abbr-grid" id="abbr-grid">
+        <!-- Generated by JS -->
       </div>
     </div>
   </section>
+
+  <!-- Abbreviation Modal -->
+  <div class="abbr-modal" id="abbr-modal" onclick="closeAbbrModal(event)">
+    <div class="abbr-modal-content" onclick="event.stopPropagation()">
+      <div class="abbr-modal-header">
+        <div>
+          <div class="abbr-modal-title" id="modal-abbr"></div>
+          <div class="abbr-modal-full" id="modal-full"></div>
+        </div>
+        <button class="abbr-modal-close" onclick="closeAbbrModal()">&times;</button>
+      </div>
+      <div class="abbr-modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    const abbreviations = {
+      "ACID": {
+        full: "Atomicity, Consistency, Isolation, Durability",
+        detail: `<h4>What it means</h4>
+<p>ACID is a set of properties that guarantee database transactions are processed reliably.</p>
+<ul>
+  <li><strong>Atomicity</strong> — All operations in a transaction succeed or all fail together</li>
+  <li><strong>Consistency</strong> — Database moves from one valid state to another</li>
+  <li><strong>Isolation</strong> — Concurrent transactions don't interfere with each other</li>
+  <li><strong>Durability</strong> — Committed transactions persist even after system failure</li>
+</ul>
+<h4>When to use</h4>
+<p>Critical for financial systems, order processing, inventory management — anywhere data integrity is essential.</p>
+<h4>Trade-off</h4>
+<p>ACID compliance often reduces performance and scalability. Consider eventual consistency (BASE) for high-scale systems where strict consistency isn't required.</p>`
+      },
+      "API": {
+        full: "Application Programming Interface",
+        detail: `<h4>What it means</h4>
+<p>A contract that defines how software components communicate. In system design, usually refers to REST or gRPC endpoints.</p>
+<h4>Interview tip</h4>
+<p>Always start your design by defining the API — it clarifies requirements and shows structured thinking.</p>
+<h4>Common patterns</h4>
+<ul>
+  <li><code>GET /users/{id}</code> — Read</li>
+  <li><code>POST /users</code> — Create</li>
+  <li><code>PUT /users/{id}</code> — Update</li>
+  <li><code>DELETE /users/{id}</code> — Delete</li>
+</ul>`
+      },
+      "APM": {
+        full: "Application Performance Monitoring",
+        detail: `<h4>What it means</h4>
+<p>Tools and practices for monitoring application health, performance, and errors in production.</p>
+<h4>Key metrics</h4>
+<ul>
+  <li>Latency (p50, p95, p99)</li>
+  <li>Error rates</li>
+  <li>Throughput (QPS)</li>
+  <li>Resource utilization</li>
+</ul>
+<h4>Popular tools</h4>
+<p>Datadog, New Relic, Prometheus + Grafana, AWS CloudWatch</p>`
+      },
+      "CAP": {
+        full: "Consistency, Availability, Partition tolerance",
+        detail: `<h4>CAP Theorem</h4>
+<p>In a distributed system, you can only guarantee 2 of 3 properties when a network partition occurs:</p>
+<ul>
+  <li><strong>Consistency</strong> — Every read receives the most recent write</li>
+  <li><strong>Availability</strong> — Every request receives a response</li>
+  <li><strong>Partition tolerance</strong> — System continues despite network failures</li>
+</ul>
+<h4>Real-world choices</h4>
+<ul>
+  <li><strong>CP</strong> (Consistency + Partition): MongoDB, HBase — banking, inventory</li>
+  <li><strong>AP</strong> (Availability + Partition): Cassandra, DynamoDB — social media, caching</li>
+</ul>
+<h4>Interview tip</h4>
+<p>CAP is about behavior <em>during</em> a partition. Most systems are CA when network is healthy.</p>`
+      },
+      "CDN": {
+        full: "Content Delivery Network",
+        detail: `<h4>What it means</h4>
+<p>A globally distributed network of servers that cache and serve content closer to users.</p>
+<h4>Use cases</h4>
+<ul>
+  <li>Static assets (images, JS, CSS)</li>
+  <li>Video streaming</li>
+  <li>API response caching</li>
+</ul>
+<h4>Key benefits</h4>
+<ul>
+  <li>Reduced latency (geographic proximity)</li>
+  <li>Lower origin server load</li>
+  <li>DDoS protection</li>
+</ul>
+<h4>Popular providers</h4>
+<p>CloudFlare, AWS CloudFront, Akamai, Fastly</p>`
+      },
+      "CQRS": {
+        full: "Command Query Responsibility Segregation",
+        detail: `<h4>What it means</h4>
+<p>Separate read (Query) and write (Command) operations into different models, potentially different databases.</p>
+<h4>When to use</h4>
+<ul>
+  <li>Read and write patterns are very different</li>
+  <li>Need to scale reads independently</li>
+  <li>Complex domain with different read views</li>
+</ul>
+<h4>Trade-offs</h4>
+<ul>
+  <li>✅ Optimized read/write performance</li>
+  <li>✅ Better scalability</li>
+  <li>❌ Eventual consistency between models</li>
+  <li>❌ Increased complexity</li>
+</ul>`
+      },
+      "CRUD": {
+        full: "Create, Read, Update, Delete",
+        detail: `<h4>What it means</h4>
+<p>The four basic operations for persistent storage. Maps directly to SQL and REST:</p>
+<ul>
+  <li><strong>Create</strong> → INSERT / POST</li>
+  <li><strong>Read</strong> → SELECT / GET</li>
+  <li><strong>Update</strong> → UPDATE / PUT/PATCH</li>
+  <li><strong>Delete</strong> → DELETE / DELETE</li>
+</ul>
+<h4>Interview tip</h4>
+<p>When designing APIs, identify which CRUD operations are needed and their expected QPS.</p>`
+      },
+      "DAU": {
+        full: "Daily Active Users",
+        detail: `<h4>What it means</h4>
+<p>Number of unique users who engage with a product in a 24-hour period.</p>
+<h4>Related metrics</h4>
+<ul>
+  <li><strong>MAU</strong> — Monthly Active Users</li>
+  <li><strong>WAU</strong> — Weekly Active Users</li>
+  <li><strong>DAU/MAU ratio</strong> — "Stickiness" (>20% is good)</li>
+</ul>
+<h4>Interview tip</h4>
+<p>Use DAU to estimate QPS: If 100M DAU and each user makes 10 requests/day → ~12K QPS average, ~36K QPS peak (3x).</p>`
+      },
+      "DLQ": {
+        full: "Dead Letter Queue",
+        detail: `<h4>What it means</h4>
+<p>A queue that stores messages that couldn't be processed successfully after multiple retries.</p>
+<h4>Why it matters</h4>
+<ul>
+  <li>Prevents poison messages from blocking the queue</li>
+  <li>Enables debugging and manual intervention</li>
+  <li>Maintains system reliability</li>
+</ul>
+<h4>Best practices</h4>
+<ul>
+  <li>Set up alerts when DLQ grows</li>
+  <li>Include metadata (retry count, error message)</li>
+  <li>Have a process to review and replay messages</li>
+</ul>`
+      },
+      "DP": {
+        full: "Dynamic Programming",
+        detail: `<h4>What it means</h4>
+<p>An algorithmic technique that solves complex problems by breaking them into overlapping subproblems.</p>
+<h4>Key patterns</h4>
+<ul>
+  <li>1D DP: Fibonacci, climbing stairs</li>
+  <li>2D DP: Grid paths, LCS</li>
+  <li>Knapsack: 0/1, unbounded</li>
+  <li>Interval DP: Matrix chain multiplication</li>
+</ul>
+<h4>Interview approach</h4>
+<ol>
+  <li>Define state (what variables describe a subproblem)</li>
+  <li>Define transition (how to build from smaller subproblems)</li>
+  <li>Define base case</li>
+  <li>Optimize space if possible</li>
+</ol>`
+      },
+      "ES": {
+        full: "Elasticsearch",
+        detail: `<h4>What it means</h4>
+<p>A distributed search and analytics engine built on Apache Lucene. Excellent for full-text search.</p>
+<h4>Use cases</h4>
+<ul>
+  <li>Full-text search</li>
+  <li>Log analytics (ELK stack)</li>
+  <li>Product search / autocomplete</li>
+</ul>
+<h4>Key concepts</h4>
+<ul>
+  <li><strong>Index</strong> — Like a database table</li>
+  <li><strong>Document</strong> — A JSON record</li>
+  <li><strong>Shards</strong> — Horizontal partitioning</li>
+  <li><strong>Replicas</strong> — High availability copies</li>
+</ul>`
+      },
+      "gRPC": {
+        full: "Google Remote Procedure Call",
+        detail: `<h4>What it means</h4>
+<p>A high-performance RPC framework using Protocol Buffers for serialization and HTTP/2 for transport.</p>
+<h4>vs REST</h4>
+<ul>
+  <li>✅ Faster (binary, HTTP/2 multiplexing)</li>
+  <li>✅ Strongly typed (protobuf schema)</li>
+  <li>✅ Streaming support</li>
+  <li>❌ Less human-readable</li>
+  <li>❌ Limited browser support</li>
+</ul>
+<h4>When to use</h4>
+<p>Internal microservice communication where performance matters. Use REST for public APIs.</p>`
+      },
+      "KV": {
+        full: "Key-Value",
+        detail: `<h4>What it means</h4>
+<p>A simple data model where data is stored and retrieved by a unique key. The foundation of caches and NoSQL databases.</p>
+<h4>Examples</h4>
+<ul>
+  <li><strong>Redis</strong> — In-memory, sub-ms latency</li>
+  <li><strong>Memcached</strong> — Pure cache, simpler</li>
+  <li><strong>DynamoDB</strong> — Managed, scalable</li>
+</ul>
+<h4>When to use</h4>
+<p>Caching, session storage, rate limiting, leaderboards — anywhere you need O(1) lookups.</p>`
+      },
+      "LB": {
+        full: "Load Balancer",
+        detail: `<h4>What it means</h4>
+<p>Distributes incoming traffic across multiple servers to improve availability and performance.</p>
+<h4>Types</h4>
+<ul>
+  <li><strong>L4 (Transport)</strong> — Routes by IP/port, faster</li>
+  <li><strong>L7 (Application)</strong> — Routes by content, smarter</li>
+</ul>
+<h4>Algorithms</h4>
+<ul>
+  <li>Round Robin — Simple, equal distribution</li>
+  <li>Least Connections — Send to least busy</li>
+  <li>IP Hash — Sticky sessions</li>
+  <li>Weighted — Based on server capacity</li>
+</ul>`
+      },
+      "LRU": {
+        full: "Least Recently Used",
+        detail: `<h4>What it means</h4>
+<p>A cache eviction policy that removes the least recently accessed items when the cache is full.</p>
+<h4>Implementation</h4>
+<p>HashMap + Doubly Linked List = O(1) get and put</p>
+<h4>Alternatives</h4>
+<ul>
+  <li><strong>LFU</strong> — Least Frequently Used</li>
+  <li><strong>FIFO</strong> — First In First Out</li>
+  <li><strong>TTL</strong> — Time-based expiration</li>
+</ul>
+<h4>Interview tip</h4>
+<p>LRU cache is a classic coding interview question. Know how to implement it!</p>`
+      },
+      "NFR": {
+        full: "Non-Functional Requirement",
+        detail: `<h4>What it means</h4>
+<p>System qualities beyond features: performance, scalability, reliability, security.</p>
+<h4>Key NFRs to discuss</h4>
+<ul>
+  <li><strong>Latency</strong> — p99 < 100ms</li>
+  <li><strong>Availability</strong> — 99.9% uptime</li>
+  <li><strong>Scalability</strong> — Handle 10x growth</li>
+  <li><strong>Consistency</strong> — Strong vs eventual</li>
+</ul>
+<h4>Interview tip</h4>
+<p>Always clarify NFRs early. They drive architectural decisions.</p>`
+      },
+      "QPS": {
+        full: "Queries Per Second",
+        detail: `<h4>What it means</h4>
+<p>Number of requests a system handles per second. Critical for capacity planning.</p>
+<h4>Quick estimation</h4>
+<p>DAU × requests/user/day ÷ 86,400 seconds</p>
+<p>Example: 100M DAU × 10 req = 1B/day ≈ 12K QPS</p>
+<h4>Peak factor</h4>
+<p>Multiply by 2-3x for peak traffic. Design for peak, not average.</p>
+<h4>Related</h4>
+<ul>
+  <li><strong>TPS</strong> — Transactions Per Second</li>
+  <li><strong>RPS</strong> — Requests Per Second</li>
+</ul>`
+      },
+      "REST": {
+        full: "Representational State Transfer",
+        detail: `<h4>What it means</h4>
+<p>An architectural style for APIs using HTTP methods and resources.</p>
+<h4>Principles</h4>
+<ul>
+  <li>Stateless — No server-side session</li>
+  <li>Resource-based — URLs identify resources</li>
+  <li>HTTP methods — GET, POST, PUT, DELETE</li>
+  <li>JSON/XML responses</li>
+</ul>
+<h4>Best practices</h4>
+<ul>
+  <li>Use nouns, not verbs: <code>/users</code> not <code>/getUsers</code></li>
+  <li>Use proper status codes: 200, 201, 400, 404, 500</li>
+  <li>Version your API: <code>/v1/users</code></li>
+</ul>`
+      },
+      "RPC": {
+        full: "Remote Procedure Call",
+        detail: `<h4>What it means</h4>
+<p>A protocol for executing code on a remote server as if it were local.</p>
+<h4>vs REST</h4>
+<ul>
+  <li>REST is resource-oriented (nouns)</li>
+  <li>RPC is action-oriented (verbs)</li>
+</ul>
+<h4>Modern implementations</h4>
+<ul>
+  <li><strong>gRPC</strong> — Binary, fast, typed</li>
+  <li><strong>JSON-RPC</strong> — Simple, human-readable</li>
+  <li><strong>Thrift</strong> — Facebook's cross-language RPC</li>
+</ul>`
+      },
+      "SQL": {
+        full: "Structured Query Language",
+        detail: `<h4>What it means</h4>
+<p>Standard language for relational databases. Also used to describe relational DBs (SQL vs NoSQL).</p>
+<h4>SQL databases</h4>
+<ul>
+  <li>PostgreSQL, MySQL, SQL Server</li>
+  <li>Strong consistency (ACID)</li>
+  <li>Structured schema</li>
+  <li>Complex queries (JOINs)</li>
+</ul>
+<h4>When to choose SQL</h4>
+<p>Complex relationships, transactions, well-defined schema, ACID requirements.</p>`
+      },
+      "STAR": {
+        full: "Situation, Task, Action, Result",
+        detail: `<h4>What it means</h4>
+<p>A framework for answering behavioral interview questions.</p>
+<h4>Structure</h4>
+<ul>
+  <li><strong>Situation</strong> — Set the context (brief)</li>
+  <li><strong>Task</strong> — What was your responsibility</li>
+  <li><strong>Action</strong> — What YOU did (most detail here)</li>
+  <li><strong>Result</strong> — Quantified outcome</li>
+</ul>
+<h4>Tips</h4>
+<ul>
+  <li>Prepare 5-6 stories that cover multiple questions</li>
+  <li>Use "I", not "we"</li>
+  <li>Include metrics: "reduced latency by 40%"</li>
+</ul>`
+      },
+      "TCC": {
+        full: "Try-Confirm-Cancel",
+        detail: `<h4>What it means</h4>
+<p>A distributed transaction pattern for eventual consistency across services.</p>
+<h4>Phases</h4>
+<ul>
+  <li><strong>Try</strong> — Reserve resources, check feasibility</li>
+  <li><strong>Confirm</strong> — Commit all reservations</li>
+  <li><strong>Cancel</strong> — Rollback if any service fails</li>
+</ul>
+<h4>vs 2PC</h4>
+<p>TCC is more flexible (business logic rollback) but requires more code. 2PC is automatic but blocking.</p>`
+      },
+      "TTL": {
+        full: "Time To Live",
+        detail: `<h4>What it means</h4>
+<p>The duration for which data remains valid before automatic expiration.</p>
+<h4>Use cases</h4>
+<ul>
+  <li>Cache expiration</li>
+  <li>Session timeout</li>
+  <li>DNS record lifetime</li>
+  <li>Message queue visibility</li>
+</ul>
+<h4>Considerations</h4>
+<ul>
+  <li>Too short → cache miss, more load</li>
+  <li>Too long → stale data</li>
+  <li>Common: 5min for hot data, 1hr for static</li>
+</ul>`
+      },
+      "2PC": {
+        full: "Two-Phase Commit",
+        detail: `<h4>What it means</h4>
+<p>A distributed transaction protocol that ensures all-or-nothing commits across multiple nodes.</p>
+<h4>Phases</h4>
+<ul>
+  <li><strong>Prepare</strong> — Coordinator asks all participants to prepare</li>
+  <li><strong>Commit</strong> — If all say yes, coordinator tells all to commit</li>
+</ul>
+<h4>Problems</h4>
+<ul>
+  <li>Blocking — Participants wait for coordinator</li>
+  <li>Single point of failure — Coordinator crash</li>
+  <li>Performance — Synchronous, slow</li>
+</ul>
+<h4>Alternatives</h4>
+<p>Saga pattern, TCC, eventual consistency</p>`
+      }
+    };
+
+    // Render abbreviation grid
+    function renderAbbreviations() {
+      const grid = document.getElementById('abbr-grid');
+      grid.innerHTML = Object.entries(abbreviations).map(([abbr, data]) => `
+        <div class="abbr-item" onclick="showAbbrDetail('${abbr}')">
+          <strong>${abbr}</strong> — ${data.full}
+        </div>
+      `).join('');
+    }
+
+    // Show modal
+    function showAbbrDetail(abbr) {
+      const data = abbreviations[abbr];
+      if (!data) return;
+      
+      document.getElementById('modal-abbr').textContent = abbr;
+      document.getElementById('modal-full').textContent = data.full;
+      document.getElementById('modal-body').innerHTML = data.detail;
+      document.getElementById('abbr-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close modal
+    function closeAbbrModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('abbr-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAbbrModal();
+    });
+
+    // Init
+    renderAbbreviations();
+  </script>
 
   <footer class="footer">
     <p class="footer-tagline">Interviews aren't about memorizing — they're about explaining trade-offs</p>
