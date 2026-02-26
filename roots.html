@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>概念索引 | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <div class="nav-links">
+      <a href="learn.html">学习</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="roots.html" class="active">索引</a>
+      <a href="progress.html">进度</a>
+    </div>
+  </nav>
+
+  <div class="index-container">
+    <h1 style="margin-bottom: 1.5rem;">概念索引</h1>
+    
+    <div class="search-box">
+      <input type="text" class="search-input" id="search" 
+             placeholder="搜索概念..." oninput="filterCards()">
+    </div>
+
+    <div class="filter-buttons" id="filters">
+      <button class="filter-btn active" data-category="all" onclick="setFilter('all')">全部</button>
+      <button class="filter-btn" data-category="基础概念" onclick="setFilter('基础概念')">📚 基础概念</button>
+      <button class="filter-btn" data-category="设计题目" onclick="setFilter('设计题目')">🏗️ 设计题目</button>
+      <button class="filter-btn" data-category="深入技术" onclick="setFilter('深入技术')">🔬 深入技术</button>
+      <button class="filter-btn" data-category="面试技巧" onclick="setFilter('面试技巧')">💡 面试技巧</button>
+    </div>
+
+    <div class="roots-grid" id="grid"></div>
+  </div>
+
+  <script src="wordData.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    let currentFilter = 'all';
+
+    function renderGrid() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const grid = document.getElementById('grid');
+      
+      let filtered = WordRoots;
+      
+      if (currentFilter !== 'all') {
+        filtered = filtered.filter(item => item.origin === currentFilter);
+      }
+      
+      if (search) {
+        filtered = filtered.filter(item => 
+          item.root.toLowerCase().includes(search) ||
+          item.meaning.toLowerCase().includes(search) ||
+          item.description.toLowerCase().includes(search)
+        );
+      }
+
+      grid.innerHTML = filtered.map((item, i) => {
+        const mastered = Storage.isMastered(item.id) ? '✓ ' : '';
+        return `
+          <div class="root-card" onclick="goToLearn(${WordRoots.indexOf(item)})">
+            <div class="root-card-title">${mastered}${item.root}</div>
+            <div class="root-card-meaning">${item.meaning}</div>
+            <span class="root-card-category">${item.origin}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function setFilter(category) {
+      currentFilter = category;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.category === category);
+      });
+      renderGrid();
+    }
+
+    function filterCards() {
+      renderGrid();
+    }
+
+    function goToLearn(index) {
+      Storage.setCurrent(index);
+      window.location.href = 'learn.html';
+    }
+
+    // 检查 URL 参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    if (categoryParam) {
+      setFilter(categoryParam);
+    }
+
+    renderGrid();
+  </script>
+</body>
+</html>

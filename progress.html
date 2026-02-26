@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学习进度 | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <div class="nav-links">
+      <a href="learn.html">学习</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="roots.html">索引</a>
+      <a href="progress.html" class="active">进度</a>
+    </div>
+  </nav>
+
+  <div class="progress-container">
+    <div class="progress-card">
+      <svg class="progress-ring" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="45" fill="none" stroke="#E5E7EB" stroke-width="8"/>
+        <circle id="progress-circle" cx="50" cy="50" r="45" fill="none" 
+                stroke="#FBBF24" stroke-width="8" stroke-linecap="round"
+                stroke-dasharray="283" stroke-dashoffset="283"
+                transform="rotate(-90 50 50)"/>
+      </svg>
+      <div class="progress-text" id="progress-percent">0%</div>
+      <div class="progress-label" id="progress-count">0 / 30 已掌握</div>
+    </div>
+
+    <div class="progress-card">
+      <h3 style="margin-bottom: 1rem;">已掌握的概念</h3>
+      <div class="mastered-list" id="mastered-list">
+        <p style="color: var(--text-secondary);">还没有标记任何概念为已掌握</p>
+      </div>
+    </div>
+
+    <div class="progress-card" style="text-align: center;">
+      <button class="btn btn-secondary" onclick="resetProgress()">重置进度</button>
+    </div>
+  </div>
+
+  <script src="wordData.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    function render() {
+      const mastered = Storage.get().mastered;
+      const total = WordRoots.length;
+      const percent = Math.round((mastered.length / total) * 100);
+      
+      // 更新圆环
+      const circle = document.getElementById('progress-circle');
+      const offset = 283 - (283 * percent / 100);
+      circle.style.strokeDashoffset = offset;
+      
+      // 更新文字
+      document.getElementById('progress-percent').textContent = `${percent}%`;
+      document.getElementById('progress-count').textContent = `${mastered.length} / ${total} 已掌握`;
+      
+      // 更新列表
+      const list = document.getElementById('mastered-list');
+      if (mastered.length === 0) {
+        list.innerHTML = '<p style="color: var(--text-secondary);">还没有标记任何概念为已掌握</p>';
+      } else {
+        const masteredItems = WordRoots.filter(item => mastered.includes(item.id));
+        list.innerHTML = masteredItems.map(item => `
+          <div class="mastered-item">
+            <span class="mastered-icon">✓</span>
+            <span>${item.root}</span>
+            <span style="color: var(--text-secondary); font-size: 0.85rem; margin-left: auto;">${item.origin}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function resetProgress() {
+      if (confirm('确定要重置所有学习进度吗？')) {
+        Storage.reset();
+        render();
+      }
+    }
+
+    render();
+  </script>
+</body>
+</html>

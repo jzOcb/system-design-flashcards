@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Design 面试速成 | 30个核心概念</title>
+  <meta name="description" content="基于 Hello Interview 53个视频提炼的 System Design 面试核心知识">
+  <link rel="stylesheet" href="css/minimal.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">SD 面试速成</div>
+    <div class="nav-links">
+      <a href="learn.html">学习</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="roots.html">索引</a>
+      <a href="progress.html">进度</a>
+    </div>
+  </nav>
+
+  <main class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span>30个核心概念</span>
+        <span>搞定 System Design</span>
+        <span class="highlight">面试</span>
+      </h1>
+      <p class="hero-subtitle">
+        来自 Hello Interview 的 FAANG 面试官教程<br>
+        从 API Design 到 Kafka，系统掌握面试必考知识
+      </p>
+      <div class="hero-cta">
+        <a href="learn.html" class="btn btn-primary">开始学习 →</a>
+        <a href="flashcard.html" class="btn btn-secondary">闪卡复习</a>
+      </div>
+    </div>
+
+    <div class="demo-animation" id="demo">
+      <!-- JS 动态加载 -->
+    </div>
+  </main>
+
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-value">30</div>
+      <div class="stat-label">核心概念</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">53</div>
+      <div class="stat-label">原视频数</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">35h</div>
+      <div class="stat-label">内容浓缩</div>
+    </div>
+  </section>
+
+  <section class="categories">
+    <h2>知识分类</h2>
+    <div class="category-grid">
+      <div class="category-card" onclick="filterCategory('基础概念')">
+        <div class="category-icon">📚</div>
+        <div class="category-name">基础概念</div>
+        <div class="category-count">8 个</div>
+      </div>
+      <div class="category-card" onclick="filterCategory('设计题目')">
+        <div class="category-icon">🏗️</div>
+        <div class="category-name">设计题目</div>
+        <div class="category-count">12 个</div>
+      </div>
+      <div class="category-card" onclick="filterCategory('深入技术')">
+        <div class="category-icon">🔬</div>
+        <div class="category-name">深入技术</div>
+        <div class="category-count">6 个</div>
+      </div>
+      <div class="category-card" onclick="filterCategory('面试技巧')">
+        <div class="category-icon">💡</div>
+        <div class="category-name">面试技巧</div>
+        <div class="category-count">4 个</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p class="footer-tagline">面试不是背答案，是讲清楚权衡</p>
+    <p class="footer-desc">
+      基于 Hello Interview 53 个视频提炼的 System Design 面试核心知识。
+      从基础概念到经典题目，从数据库深入到面试技巧，用最短时间建立完整知识框架。
+    </p>
+    <p class="footer-source">
+      内容来源：<a href="https://www.youtube.com/@hello_interview" target="_blank">Hello Interview</a>
+    </p>
+  </footer>
+
+  <script src="wordData.js"></script>
+  <script>
+    // 动画展示前5个概念
+    const demo = document.getElementById('demo');
+    if (typeof WordRoots !== 'undefined') {
+      const samples = WordRoots.slice(0, 5);
+      let html = '';
+      samples.forEach((item, i) => {
+        html += `<div class="demo-item" style="animation-delay: ${i * 0.2}s">
+          <span class="demo-root">${item.root}</span>
+          <span class="demo-meaning">${item.meaning}</span>
+        </div>`;
+      });
+      demo.innerHTML = html;
+    }
+
+    function filterCategory(cat) {
+      window.location.href = `roots.html?category=${encodeURIComponent(cat)}`;
+    }
+  </script>
+</body>
+</html>

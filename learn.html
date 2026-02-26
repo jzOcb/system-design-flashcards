@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学习 | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <div class="nav-links">
+      <a href="learn.html" class="active">学习</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="roots.html">索引</a>
+      <a href="progress.html">进度</a>
+    </div>
+  </nav>
+
+  <div class="learn-container">
+    <div class="learn-progress" id="progress-text">1 / 30</div>
+    
+    <div class="learn-card" id="card">
+      <div class="learn-header">
+        <span class="learn-category" id="category">基础概念</span>
+        <button class="btn btn-secondary" id="master-btn" onclick="toggleMaster()">
+          标记已掌握
+        </button>
+      </div>
+      <h2 class="learn-title" id="title">API Design</h2>
+      <p class="learn-meaning" id="meaning">设计系统间通信的接口规范</p>
+      <p class="learn-description" id="description">...</p>
+      <div class="learn-examples">
+        <h4>示例</h4>
+        <ul id="examples"></ul>
+      </div>
+    </div>
+
+    <div class="learn-nav">
+      <button class="btn btn-secondary" id="prev-btn" onclick="prev()">← 上一个</button>
+      <button class="btn btn-primary" id="next-btn" onclick="next()">下一个 →</button>
+    </div>
+  </div>
+
+  <script src="wordData.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    let currentIndex = Storage.getCurrent();
+
+    function render() {
+      const item = WordRoots[currentIndex];
+      if (!item) return;
+
+      document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${WordRoots.length}`;
+      document.getElementById('category').textContent = item.origin;
+      document.getElementById('title').textContent = item.root;
+      document.getElementById('meaning').textContent = item.meaning;
+      document.getElementById('description').textContent = item.description;
+      
+      const examplesList = document.getElementById('examples');
+      examplesList.innerHTML = item.examples.map(e => `<li>${e}</li>`).join('');
+
+      const masterBtn = document.getElementById('master-btn');
+      if (Storage.isMastered(item.id)) {
+        masterBtn.textContent = '✓ 已掌握';
+        masterBtn.classList.add('btn-primary');
+        masterBtn.classList.remove('btn-secondary');
+      } else {
+        masterBtn.textContent = '标记已掌握';
+        masterBtn.classList.remove('btn-primary');
+        masterBtn.classList.add('btn-secondary');
+      }
+
+      document.getElementById('prev-btn').disabled = currentIndex === 0;
+      document.getElementById('next-btn').disabled = currentIndex === WordRoots.length - 1;
+    }
+
+    function prev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        Storage.setCurrent(currentIndex);
+        render();
+      }
+    }
+
+    function next() {
+      if (currentIndex < WordRoots.length - 1) {
+        currentIndex++;
+        Storage.setCurrent(currentIndex);
+        render();
+      }
+    }
+
+    function toggleMaster() {
+      const item = WordRoots[currentIndex];
+      if (Storage.isMastered(item.id)) {
+        Storage.unmarkMastered(item.id);
+      } else {
+        Storage.markMastered(item.id);
+      }
+      render();
+    }
+
+    // 键盘快捷键
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === ' ') { e.preventDefault(); toggleMaster(); }
+    });
+
+    render();
+  </script>
+</body>
+</html>

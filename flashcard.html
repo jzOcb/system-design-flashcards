@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>闪卡 | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <div class="nav-links">
+      <a href="learn.html">学习</a>
+      <a href="flashcard.html" class="active">闪卡</a>
+      <a href="roots.html">索引</a>
+      <a href="progress.html">进度</a>
+    </div>
+  </nav>
+
+  <div class="flashcard-container">
+    <div class="learn-progress" id="progress-text">1 / 30</div>
+    
+    <div class="flashcard" id="flashcard" onclick="flip()">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="flashcard-root" id="root">API Design</div>
+          <div class="flashcard-hint">点击翻转查看含义</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="flashcard-meaning" id="meaning">设计系统间通信的接口规范</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard-nav">
+      <button class="btn btn-secondary" onclick="prev()">← 上一个</button>
+      <button class="btn btn-secondary" onclick="shuffle()">🔀 随机</button>
+      <button class="btn btn-primary" onclick="next()">下一个 →</button>
+    </div>
+
+    <p style="text-align: center; color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">
+      快捷键：← → 翻页，空格翻转
+    </p>
+  </div>
+
+  <script src="wordData.js"></script>
+  <script src="js/storage.js"></script>
+  <script>
+    let cards = [...WordRoots];
+    let currentIndex = 0;
+
+    function render() {
+      const item = cards[currentIndex];
+      document.getElementById('progress-text').textContent = `${currentIndex + 1} / ${cards.length}`;
+      document.getElementById('root').textContent = item.root;
+      document.getElementById('meaning').textContent = item.meaning;
+      document.getElementById('flashcard').classList.remove('flipped');
+    }
+
+    function flip() {
+      document.getElementById('flashcard').classList.toggle('flipped');
+    }
+
+    function prev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        render();
+      }
+    }
+
+    function next() {
+      if (currentIndex < cards.length - 1) {
+        currentIndex++;
+        render();
+      }
+    }
+
+    function shuffle() {
+      cards = cards.sort(() => Math.random() - 0.5);
+      currentIndex = 0;
+      render();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === ' ') { e.preventDefault(); flip(); }
+    });
+
+    render();
+  </script>
+</body>
+</html>
