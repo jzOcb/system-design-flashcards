@@ -13,6 +13,30 @@
   --shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg: #0F172A;
+  --card-bg: #1E293B;
+  --text: #F1F5F9;
+  --text-secondary: #94A3B8;
+  --border: #334155;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
 * {
   margin: 0;
   padding: 0;
