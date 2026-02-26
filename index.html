@@ -7,7 +7,78 @@
   <meta name="description" content="基于 Hello Interview 53个视频提炼的 System Design 面试核心知识">
   <link rel="stylesheet" href="css/minimal.css">
   <link rel="manifest" href="manifest.json">
-
+  <style>
+    .abbr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+    .abbr-item {
+      padding: 0.75rem;
+      background: var(--bg);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .abbr-item:hover {
+      background: var(--card-bg);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .abbr-item strong { color: var(--primary-dark); }
+    .abbr-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s;
+    }
+    .abbr-modal.active { opacity: 1; visibility: visible; }
+    .abbr-modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+      transform: scale(0.9);
+      transition: transform 0.2s;
+    }
+    .abbr-modal.active .abbr-modal-content { transform: scale(1); }
+    .abbr-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+    .abbr-modal-title { font-size: 1.5rem; font-weight: 700; color: var(--primary-dark); }
+    .abbr-modal-full { font-size: 1rem; color: var(--text-secondary); margin-top: 0.25rem; }
+    .abbr-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      color: var(--text-secondary);
+    }
+    .abbr-modal-close:hover { color: var(--text); }
+    .abbr-modal-body { line-height: 1.8; }
+    .abbr-modal-body h4 { margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text); }
+    .abbr-modal-body ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+    .abbr-modal-body li { margin-bottom: 0.25rem; }
+    .abbr-modal-body code { background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+  </style>
 </head>
 <body>
   <nav class="nav">
@@ -103,6 +174,309 @@
       </div>
     </div>
   </section>
+
+  <section class="categories" style="padding-top: 2rem;">
+    <h2>术语速查</h2>
+    <p style="color: var(--text-secondary); margin-bottom: 1rem;">点击任意术语查看详细解释</p>
+    <div style="background: var(--card-bg); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow);">
+      <div class="abbr-grid" id="abbr-grid"></div>
+    </div>
+  </section>
+
+  <div class="abbr-modal" id="abbr-modal" onclick="closeAbbrModal(event)">
+    <div class="abbr-modal-content" onclick="event.stopPropagation()">
+      <div class="abbr-modal-header">
+        <div>
+          <div class="abbr-modal-title" id="modal-abbr"></div>
+          <div class="abbr-modal-full" id="modal-full"></div>
+        </div>
+        <button class="abbr-modal-close" onclick="closeAbbrModal()">&times;</button>
+      </div>
+      <div class="abbr-modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    const abbreviations = {
+      "ACID": {
+        full: "原子性、一致性、隔离性、持久性",
+        detail: `<h4>含义</h4>
+<p>数据库事务的四大特性，保证事务可靠处理。</p>
+<ul>
+  <li><strong>原子性</strong> — 事务中的操作要么全部成功，要么全部失败</li>
+  <li><strong>一致性</strong> — 数据库从一个有效状态转到另一个有效状态</li>
+  <li><strong>隔离性</strong> — 并发事务互不干扰</li>
+  <li><strong>持久性</strong> — 提交的事务即使系统崩溃也不会丢失</li>
+</ul>
+<h4>使用场景</h4>
+<p>金融系统、订单处理、库存管理 —— 任何数据完整性至关重要的场景。</p>
+<h4>权衡</h4>
+<p>ACID 通常会降低性能和可扩展性。对于不需要严格一致性的高并发系统，考虑最终一致性（BASE）。</p>`
+      },
+      "API": {
+        full: "应用程序编程接口",
+        detail: `<h4>含义</h4>
+<p>定义软件组件如何通信的契约。在系统设计中通常指 REST 或 gRPC 端点。</p>
+<h4>面试技巧</h4>
+<p>设计时先定义 API —— 明确需求，展示结构化思维。</p>
+<h4>常见模式</h4>
+<ul>
+  <li><code>GET /users/{id}</code> — 读取</li>
+  <li><code>POST /users</code> — 创建</li>
+  <li><code>PUT /users/{id}</code> — 更新</li>
+  <li><code>DELETE /users/{id}</code> — 删除</li>
+</ul>`
+      },
+      "CAP": {
+        full: "一致性、可用性、分区容错性",
+        detail: `<h4>CAP 定理</h4>
+<p>分布式系统在网络分区时只能保证三者中的两个：</p>
+<ul>
+  <li><strong>一致性</strong> — 每次读取都返回最新写入</li>
+  <li><strong>可用性</strong> — 每个请求都能得到响应</li>
+  <li><strong>分区容错</strong> — 网络故障时系统继续运行</li>
+</ul>
+<h4>实际选择</h4>
+<ul>
+  <li><strong>CP</strong>：MongoDB, HBase — 银行、库存</li>
+  <li><strong>AP</strong>：Cassandra, DynamoDB — 社交媒体、缓存</li>
+</ul>
+<h4>面试技巧</h4>
+<p>CAP 是关于分区<em>发生时</em>的行为。网络正常时大多数系统都是 CA。</p>`
+      },
+      "CDN": {
+        full: "内容分发网络",
+        detail: `<h4>含义</h4>
+<p>全球分布的服务器网络，在离用户更近的位置缓存和提供内容。</p>
+<h4>使用场景</h4>
+<ul>
+  <li>静态资源（图片、JS、CSS）</li>
+  <li>视频流</li>
+  <li>API 响应缓存</li>
+</ul>
+<h4>主要优势</h4>
+<ul>
+  <li>降低延迟（地理位置接近）</li>
+  <li>减少源服务器负载</li>
+  <li>DDoS 防护</li>
+</ul>`
+      },
+      "CQRS": {
+        full: "命令查询职责分离",
+        detail: `<h4>含义</h4>
+<p>将读（查询）和写（命令）操作分离到不同模型，甚至不同数据库。</p>
+<h4>使用场景</h4>
+<ul>
+  <li>读写模式差异很大</li>
+  <li>需要独立扩展读操作</li>
+  <li>复杂领域需要不同的读取视图</li>
+</ul>
+<h4>权衡</h4>
+<ul>
+  <li>✅ 优化读写性能</li>
+  <li>✅ 更好的可扩展性</li>
+  <li>❌ 模型间最终一致</li>
+  <li>❌ 复杂度增加</li>
+</ul>`
+      },
+      "CRUD": {
+        full: "创建、读取、更新、删除",
+        detail: `<h4>含义</h4>
+<p>持久化存储的四种基本操作，直接映射到 SQL 和 REST：</p>
+<ul>
+  <li><strong>Create</strong> → INSERT / POST</li>
+  <li><strong>Read</strong> → SELECT / GET</li>
+  <li><strong>Update</strong> → UPDATE / PUT</li>
+  <li><strong>Delete</strong> → DELETE / DELETE</li>
+</ul>
+<h4>面试技巧</h4>
+<p>设计 API 时，确定需要哪些 CRUD 操作及其预期 QPS。</p>`
+      },
+      "DAU": {
+        full: "日活跃用户",
+        detail: `<h4>含义</h4>
+<p>24小时内与产品互动的独立用户数。</p>
+<h4>相关指标</h4>
+<ul>
+  <li><strong>MAU</strong> — 月活跃用户</li>
+  <li><strong>DAU/MAU</strong> — "粘性"（>20% 算好）</li>
+</ul>
+<h4>面试技巧</h4>
+<p>用 DAU 估算 QPS：1亿 DAU，每用户每天 10 请求 → 约 12K QPS 平均，36K QPS 峰值（3倍）</p>`
+      },
+      "DLQ": {
+        full: "死信队列",
+        detail: `<h4>含义</h4>
+<p>存储多次重试后仍无法成功处理的消息的队列。</p>
+<h4>重要性</h4>
+<ul>
+  <li>防止毒消息阻塞队列</li>
+  <li>便于调试和人工干预</li>
+  <li>维护系统可靠性</li>
+</ul>
+<h4>最佳实践</h4>
+<ul>
+  <li>DLQ 增长时设置告警</li>
+  <li>包含元数据（重试次数、错误信息）</li>
+  <li>有审查和重放消息的流程</li>
+</ul>`
+      },
+      "QPS": {
+        full: "每秒查询数",
+        detail: `<h4>含义</h4>
+<p>系统每秒处理的请求数。容量规划的关键指标。</p>
+<h4>快速估算</h4>
+<p>DAU × 每用户每天请求数 ÷ 86400 秒</p>
+<p>例：1亿 DAU × 10 请求 = 10亿/天 ≈ 12K QPS</p>
+<h4>峰值系数</h4>
+<p>乘以 2-3 倍作为峰值。按峰值设计，不是平均值。</p>`
+      },
+      "LB": {
+        full: "负载均衡器",
+        detail: `<h4>含义</h4>
+<p>将流量分发到多台服务器，提高可用性和性能。</p>
+<h4>类型</h4>
+<ul>
+  <li><strong>L4（传输层）</strong> — 按 IP/端口路由，更快</li>
+  <li><strong>L7（应用层）</strong> — 按内容路由，更智能</li>
+</ul>
+<h4>算法</h4>
+<ul>
+  <li>轮询 — 简单，均匀分配</li>
+  <li>最少连接 — 发给最闲的</li>
+  <li>IP 哈希 — 会话保持</li>
+  <li>加权 — 按服务器容量</li>
+</ul>`
+      },
+      "LRU": {
+        full: "最近最少使用",
+        detail: `<h4>含义</h4>
+<p>缓存淘汰策略，缓存满时移除最久未访问的项。</p>
+<h4>实现</h4>
+<p>HashMap + 双向链表 = O(1) 读写</p>
+<h4>替代方案</h4>
+<ul>
+  <li><strong>LFU</strong> — 最不经常使用</li>
+  <li><strong>FIFO</strong> — 先进先出</li>
+  <li><strong>TTL</strong> — 基于时间过期</li>
+</ul>
+<h4>面试技巧</h4>
+<p>LRU 缓存是经典编程面试题，要会实现！</p>`
+      },
+      "TTL": {
+        full: "存活时间",
+        detail: `<h4>含义</h4>
+<p>数据在自动过期前保持有效的时长。</p>
+<h4>使用场景</h4>
+<ul>
+  <li>缓存过期</li>
+  <li>会话超时</li>
+  <li>DNS 记录生存期</li>
+  <li>消息队列可见性</li>
+</ul>
+<h4>考量</h4>
+<ul>
+  <li>太短 → 缓存失效多，负载高</li>
+  <li>太长 → 数据过期</li>
+  <li>常见：热数据 5 分钟，静态数据 1 小时</li>
+</ul>`
+      },
+      "REST": {
+        full: "表述性状态转移",
+        detail: `<h4>含义</h4>
+<p>使用 HTTP 方法和资源的 API 架构风格。</p>
+<h4>原则</h4>
+<ul>
+  <li>无状态 — 不保存服务端会话</li>
+  <li>基于资源 — URL 标识资源</li>
+  <li>HTTP 方法 — GET/POST/PUT/DELETE</li>
+</ul>
+<h4>最佳实践</h4>
+<ul>
+  <li>用名词不用动词：<code>/users</code> 而非 <code>/getUsers</code></li>
+  <li>正确使用状态码：200, 201, 400, 404, 500</li>
+  <li>API 版本化：<code>/v1/users</code></li>
+</ul>`
+      },
+      "gRPC": {
+        full: "Google 远程过程调用",
+        detail: `<h4>含义</h4>
+<p>高性能 RPC 框架，使用 Protocol Buffers 序列化和 HTTP/2 传输。</p>
+<h4>vs REST</h4>
+<ul>
+  <li>✅ 更快（二进制，HTTP/2 多路复用）</li>
+  <li>✅ 强类型（protobuf schema）</li>
+  <li>✅ 支持流</li>
+  <li>❌ 可读性差</li>
+  <li>❌ 浏览器支持有限</li>
+</ul>
+<h4>使用场景</h4>
+<p>内部微服务通信。公开 API 用 REST。</p>`
+      },
+      "2PC": {
+        full: "两阶段提交",
+        detail: `<h4>含义</h4>
+<p>分布式事务协议，确保多节点全部提交或全部回滚。</p>
+<h4>阶段</h4>
+<ul>
+  <li><strong>准备</strong> — 协调者询问所有参与者是否准备好</li>
+  <li><strong>提交</strong> — 如果都同意，协调者通知所有人提交</li>
+</ul>
+<h4>问题</h4>
+<ul>
+  <li>阻塞 — 参与者等待协调者</li>
+  <li>单点故障 — 协调者崩溃</li>
+  <li>性能 — 同步，慢</li>
+</ul>
+<h4>替代方案</h4>
+<p>Saga 模式、TCC、最终一致性</p>`
+      },
+      "STAR": {
+        full: "情境、任务、行动、结果",
+        detail: `<h4>含义</h4>
+<p>回答行为面试问题的框架。</p>
+<h4>结构</h4>
+<ul>
+  <li><strong>Situation</strong> — 背景（简短）</li>
+  <li><strong>Task</strong> — 你的职责</li>
+  <li><strong>Action</strong> — 你做了什么（重点）</li>
+  <li><strong>Result</strong> — 量化结果</li>
+</ul>
+<h4>技巧</h4>
+<ul>
+  <li>准备 5-6 个故事覆盖多种问题</li>
+  <li>用"我"不用"我们"</li>
+  <li>包含数据："延迟降低 40%"</li>
+</ul>`
+      }
+    };
+
+    function renderAbbreviations() {
+      const grid = document.getElementById('abbr-grid');
+      grid.innerHTML = Object.entries(abbreviations).map(([abbr, data]) => 
+        \`<div class="abbr-item" onclick="showAbbrDetail('\${abbr}')"><strong>\${abbr}</strong> — \${data.full}</div>\`
+      ).join('');
+    }
+
+    function showAbbrDetail(abbr) {
+      const data = abbreviations[abbr];
+      if (!data) return;
+      document.getElementById('modal-abbr').textContent = abbr;
+      document.getElementById('modal-full').textContent = data.full;
+      document.getElementById('modal-body').innerHTML = data.detail;
+      document.getElementById('abbr-modal').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAbbrModal(e) {
+      if (e && e.target !== e.currentTarget) return;
+      document.getElementById('abbr-modal').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAbbrModal(); });
+    renderAbbreviations();
+  </script>
 
   <footer class="footer">
     <p class="footer-tagline">面试不是背答案，是讲清楚权衡</p>
