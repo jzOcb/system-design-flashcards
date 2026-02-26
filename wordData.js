@@ -304,7 +304,12 @@ const WordRoots = [
       "TF-IDF：词频 × 逆文档频率",
       "Elasticsearch：分片 + 副本 + 自动均衡"
     ],
-    videoId: "Design FB Post Search"
+    videoId: "Design FB Post Search",
+    quiz: {
+      question: "搜索引擎的倒排索引（Inverted Index）是什么？",
+      options: ["文档 ID → 包含的词列表", "词 → 包含该词的文档列表", "用户 → 搜索历史", "URL → 网页内容"],
+      correctAnswer: 1
+    }
   },
   {
     id: 18,
@@ -317,7 +322,12 @@ const WordRoots = [
       "批量：1000 条/批，避免 API 限流",
       "模板：'{{user}} liked your post'"
     ],
-    videoId: "Notification System"
+    videoId: "Notification System",
+    quiz: {
+      question: "通知系统设计中，为什么要使用消息队列？",
+      options: ["存储通知历史", "削峰填谷，处理高并发通知请求", "加密通知内容", "统计通知数量"],
+      correctAnswer: 1
+    }
   },
   {
     id: 19,
@@ -330,7 +340,12 @@ const WordRoots = [
       "Top 10：ZREVRANGE leaderboard 0 9 WITHSCORES",
       "Count-Min Sketch：固定内存估算频率"
     ],
-    videoId: "y-tA2NW4LNY"
+    videoId: "y-tA2NW4LNY",
+    quiz: {
+      question: "小规模实时排行榜最适合用哪种数据结构？",
+      options: ["Redis List", "Redis Hash", "Redis Sorted Set (ZSET)", "MySQL 表"],
+      correctAnswer: 2
+    }
   },
   {
     id: 20,
@@ -343,7 +358,12 @@ const WordRoots = [
       "增量同步：只同步变化的块",
       "冲突：文件重命名为 'file (conflict)'"
     ],
-    videoId: "Design Dropbox or Google Drive"
+    videoId: "Design Dropbox or Google Drive",
+    quiz: {
+      question: "Dropbox 文件同步系统为什么采用文件分块策略？",
+      options: ["加密文件更安全", "只需上传/下载变化的块，节省带宽", "方便文件压缩", "提高文件搜索速度"],
+      correctAnswer: 1
+    }
   },
 
   // === 深入技术 (Deep Dives) ===
@@ -358,7 +378,12 @@ const WordRoots = [
       "聚簇键：分区内的排序顺序",
       "QUORUM：多数节点确认才返回成功"
     ],
-    videoId: "TD3-INhm60Q"
+    videoId: "TD3-INhm60Q",
+    quiz: {
+      question: "Cassandra 的无主架构（Masterless Architecture）有什么优势？",
+      options: ["数据查询更快", "避免单点故障，所有节点都可以处理读写", "数据存储更紧凑", "配置更简单"],
+      correctAnswer: 1
+    }
   },
   {
     id: 22,
@@ -371,7 +396,12 @@ const WordRoots = [
       "分区：按 key 哈希分配，保证顺序",
       "Consumer Group：自动负载均衡"
     ],
-    videoId: "Kafka System Design Deep Dive"
+    videoId: "Kafka System Design Deep Dive",
+    quiz: {
+      question: "Kafka 为什么能实现高吞吐量？",
+      options: ["使用内存存储", "顺序写磁盘 + 零拷贝 + 批量处理", "压缩消息大小", "减少分区数量"],
+      correctAnswer: 1
+    }
   },
   {
     id: 23,
@@ -384,7 +414,12 @@ const WordRoots = [
       "分布式锁：SET lock NX EX 10",
       "排行榜：ZSET 自动排序"
     ],
-    videoId: "Redis Deep Dive"
+    videoId: "Redis Deep Dive",
+    quiz: {
+      question: "Redis 使用单线程模型，如何实现高并发？",
+      options: ["使用多进程", "通过 I/O 多路复用技术", "增加 CPU 核心", "使用分布式架构"],
+      correctAnswer: 1
+    }
   },
   {
     id: 24,
@@ -397,7 +432,12 @@ const WordRoots = [
       "分片：主分片 + 副本分片",
       "查询：GET /index/_search { 'query': {...} }"
     ],
-    videoId: "Elasticsearch Deep Dive"
+    videoId: "Elasticsearch Deep Dive",
+    quiz: {
+      question: "Elasticsearch 最适合哪种应用场景？",
+      options: ["ACID 事务处理", "全文搜索和日志分析", "图数据库查询", "实时视频流处理"],
+      correctAnswer: 1
+    }
   },
   {
     id: 25,
