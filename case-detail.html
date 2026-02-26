@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Detail - Hello Interview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        .case-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .case-title {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .case-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .meta-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .category-product {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .category-infrastructure {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .difficulty-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .subsection-title {
+            font-size: 1.3rem;
+            color: #555;
+            margin: 20px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .list-item {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.2s ease;
+        }
+
+        .list-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .api-endpoint {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            display: flex;
+            gap: 10px;
+        }
+
+        .http-method {
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .method-post {
+            background: #4caf50;
+        }
+
+        .method-get {
+            background: #2196f3;
+        }
+
+        .method-put {
+            background: #ff9800;
+        }
+
+        .method-delete {
+            background: #f44336;
+        }
+
+        .design-diagram {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            border: 2px solid #e0e0e0;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .deep-dive-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .deep-dive-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .deep-dive-details {
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .case-title {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="cases.html" class="back-link">← Back to All Cases</a>
+        
+        <div id="caseContent">
+            <!-- Case content will be dynamically loaded here -->
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn" id="prevBtn" onclick="navigateCase('prev')">← Previous Case</button>
+            <button class="nav-btn" id="nextBtn" onclick="navigateCase('next')">Next Case →</button>
+        </div>
+    </div>
+
+    <script src="casesData.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const caseId = urlParams.get('id');
+        const caseContent = document.getElementById('caseContent');
+        
+        // Find current case
+        const currentCaseIndex = casesData.cases.findIndex(c => c.id === caseId);
+        const currentCase = casesData.cases[currentCaseIndex];
+
+        if (!currentCase) {
+            caseContent.innerHTML = '<p>Case not found. <a href="cases.html">Return to cases list</a></p>';
+        } else {
+            renderCase(currentCase);
+            updateNavButtons(currentCaseIndex);
+        }
+
+        function renderCase(caseItem) {
+            const categoryClass = caseItem.category === 'Product Design' ? 'category-product' : 'category-infrastructure';
+            const difficultyClass = caseItem.difficulty === 'Medium' ? 'difficulty-medium' : 'difficulty-hard';
+
+            let html = `
+                <div class="case-header">
+                    <h1 class="case-title">${caseItem.title}</h1>
+                    <div class="case-meta">
+                        <span class="meta-badge ${categoryClass}">${caseItem.category}</span>
+                        <span class="meta-badge ${difficultyClass}">${caseItem.difficulty}</span>
+                    </div>
+                </div>
+
+                <!-- Requirements Section -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">📋</span>
+                        Requirements
+                    </h2>
+                    
+                    <h3 class="subsection-title">Functional Requirements</h3>
+                    ${caseItem.requirements.functional.map(req => 
+                        `<div class="list-item">${req}</div>`
+                    ).join('')}
+                    
+                    <h3 class="subsection-title">Non-Functional Requirements</h3>
+                    ${caseItem.requirements.non_functional.map(req => 
+                        `<div class="list-item">${req}</div>`
+                    ).join('')}
+                </div>
+
+                <!-- API Design Section -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔌</span>
+                        API Design
+                    </h2>
+                    ${caseItem.api_design.map(api => {
+                        const [method, ...pathParts] = api.split(' ');
+                        const path = pathParts.join(' ');
+                        const methodClass = `method-${method.toLowerCase()}`;
+                        return `
+                            <div class="api-endpoint">
+                                <span class="http-method ${methodClass}">${method}</span>
+                                <span>${path}</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+
+                <!-- High Level Design Section -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🏗️</span>
+                        High Level Design
+                    </h2>
+                    <div class="design-diagram">${caseItem.high_level_design}</div>
+                </div>
+
+                <!-- Deep Dives Section -->
+                <div class="section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🔍</span>
+                        Deep Dives
+                    </h2>
+                    ${caseItem.deep_dives.map(dive => `
+                        <div class="deep-dive-card">
+                            <div class="deep-dive-title">
+                                <span>💡</span>
+                                <span>${dive.topic}</span>
+                            </div>
+                            <div class="deep-dive-details">${dive.details}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            caseContent.innerHTML = html;
+        }
+
+        function updateNavButtons(currentIndex) {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (currentIndex <= 0) {
+                prevBtn.disabled = true;
+                prevBtn.style.visibility = 'hidden';
+            } else {
+                prevBtn.disabled = false;
+                prevBtn.style.visibility = 'visible';
+            }
+
+            if (currentIndex >= casesData.cases.length - 1) {
+                nextBtn.disabled = true;
+                nextBtn.style.visibility = 'hidden';
+            } else {
+                nextBtn.disabled = false;
+                nextBtn.style.visibility = 'visible';
+            }
+        }
+
+        function navigateCase(direction) {
+            let newIndex = currentCaseIndex;
+            if (direction === 'prev') {
+                newIndex = Math.max(0, currentCaseIndex - 1);
+            } else if (direction === 'next') {
+                newIndex = Math.min(casesData.cases.length - 1, currentCaseIndex + 1);
+            }
+
+            if (newIndex !== currentCaseIndex) {
+                const newCaseId = casesData.cases[newIndex].id;
+                window.location.href = `case-detail.html?id=${newCaseId}`;
+            }
+        }
+    </script>
+</body>
+</html>
