@@ -202,17 +202,28 @@
                     ${item.requirements.non_functional.map(r => '<div class="list-item">' + r + '</div>').join('')}
                 </div>
 
+                ${item.estimation ? `
+                <div class="section">
+                    <h2 class="section-title">🧮 容量估算</h2>
+                    <div class="design-diagram">${formatText(item.estimation)}</div>
+                </div>
+                ` : ''}
+
                 <div class="section">
                     <h2 class="section-title">🔌 API 设计</h2>
                     ${item.api_design.map(api => {
-                        const [method, ...rest] = api.split(' ');
-                        return '<div class="api-endpoint"><span class="http-method method-' + method.toLowerCase() + '">' + method + '</span>' + rest.join(' ') + '</div>';
+                        const parts = api.split(' ');
+                        const method = parts[0];
+                        if (['GET','POST','PUT','DELETE','PATCH','WebSocket'].includes(method)) {
+                            return '<div class="api-endpoint"><span class="http-method method-' + method.toLowerCase() + '">' + method + '</span>' + parts.slice(1).join(' ') + '</div>';
+                        }
+                        return '<div class="api-endpoint" style="color:var(--text-secondary);">' + api + '</div>';
                     }).join('')}
                 </div>
 
                 <div class="section">
                     <h2 class="section-title">🏗️ 高层设计</h2>
-                    <div class="design-diagram">${item.high_level_design}</div>
+                    <div class="design-diagram">${formatText(item.high_level_design)}</div>
                 </div>
 
                 <div class="section">
@@ -220,11 +231,36 @@
                     ${item.deep_dives.map(d => `
                         <div class="deep-dive-card">
                             <div class="deep-dive-title">💡 ${d.topic}</div>
-                            <div class="deep-dive-details">${d.details}</div>
+                            <div class="deep-dive-details">${formatText(d.details)}</div>
                         </div>
                     `).join('')}
                 </div>
+
+                ${item.interviewTips ? `
+                <div class="section" style="background: #ECFDF5; border-left: 4px solid #10B981;">
+                    <h2 class="section-title">💡 面试技巧</h2>
+                    ${item.interviewTips.map(t => '<div class="list-item" style="background: white;">' + t + '</div>').join('')}
+                </div>
+                ` : ''}
+
+                ${item.commonMistakes ? `
+                <div class="section" style="background: #FEF2F2; border-left: 4px solid #EF4444;">
+                    <h2 class="section-title">⚠️ 常见错误</h2>
+                    ${item.commonMistakes.map(m => '<div class="list-item" style="background: white;">' + m + '</div>').join('')}
+                </div>
+                ` : ''}
             `;
+        }
+
+        function formatText(text) {
+            if (!text) return '';
+            return text
+                .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre style="background:#1a1a2e;color:#eee;padding:1rem;border-radius:8px;overflow-x:auto;font-size:0.85rem;"><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code style="background:var(--bg);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.9em;">$1</code>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+        }
         }
 
         function updateNavButtons(idx) {
