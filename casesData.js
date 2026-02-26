@@ -401,6 +401,81 @@ const casesData = {
           details: "Distribute work by URL hash. Multiple fetcher workers. Checkpoint progress. Retry failed fetches with exponential backoff. Dead letter queue for persistent failures. Monitor crawler health."
         }
       ]
+    },
+    {
+      id: "dropbox",
+      title: "Design Dropbox",
+      category: "Product Design",
+      difficulty: "Medium",
+      requirements: {
+        functional: [
+          "Upload files to remote storage",
+          "Download files from remote storage",
+          "Automatically sync files across devices",
+          "Share files and folders with other users",
+          "Support version history and rollback",
+          "Handle file conflicts"
+        ],
+        non_functional: [
+          "High Availability (prioritize over consistency)",
+          "Low Latency uploads and downloads",
+          "Support large files (up to 50GB)",
+          "Resumable uploads for large files",
+          "High Data Integrity (accurate sync)",
+          "Scalability (millions of users, billions of files)"
+        ]
+      },
+      api_design: [
+        "POST /files/upload - Upload file with metadata",
+        "GET /files/{id}/download - Download file",
+        "PUT /files/{id} - Update file (new version)",
+        "GET /files/sync?device_id={id} - Get sync delta",
+        "POST /files/{id}/share - Share file with users",
+        "GET /files/versions/{id} - Get version history"
+      ],
+      high_level_design: `
+        **Upload Flow:**
+        Client → API Gateway → Upload Service → Chunking (split file)
+        → Object Storage (S3) → Metadata DB → Update sync queue
+        → Notification Service → Push to other devices
+        
+        **Sync Flow:**
+        File watcher detects local change → Upload chunks → Server processes
+        → Update metadata → Broadcast to connected devices via WebSocket
+        → Devices pull delta and download changed chunks
+        
+        **Download Flow:**
+        Client requests file → Check local cache → If miss, fetch from CDN/S3
+        → Reassemble chunks → Store locally → Update sync state
+        
+        **Key Components:**
+        - API Gateway
+        - Upload/Download Services
+        - Chunking Service (break files into 4MB chunks)
+        - Object Storage (S3 for file chunks)
+        - Metadata Database (file info, versions, permissions)
+        - Sync Queue (Kafka for event streaming)
+        - WebSocket servers (real-time notifications)
+        - File watcher (monitor local changes)
+      `,
+      deep_dives: [
+        {
+          topic: "Chunking & Resumable Uploads",
+          details: "Split files into 4MB chunks. Upload chunks independently with hash. Track uploaded chunks in DB. On failure/disconnect, resume from last successful chunk. Use multipart upload API. Deduplication: same chunk (by hash) stored once."
+        },
+        {
+          topic: "File Synchronization",
+          details: "Use version vectors or timestamps per file. Client polls or subscribes to sync service. Server sends delta (changed files since last sync). Client downloads only changed chunks. Handle conflicts: last-write-wins or manual merge."
+        },
+        {
+          topic: "Conflict Resolution",
+          details: "Detect conflicts when multiple devices edit same file. Strategies: last-write-wins (simple), keep both versions (safest), operational transform (complex). Use version IDs and timestamps. Notify user of conflicts."
+        },
+        {
+          topic: "Metadata Management",
+          details: "Store file metadata separate from content: name, size, hash, chunks[], version, modified_time, permissions. Shard by user_id. Index by path for fast lookups. Use SQL for ACID properties on metadata operations."
+        }
+      ]
     }
   ]
 };
