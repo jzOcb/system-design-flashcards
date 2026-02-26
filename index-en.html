@@ -634,11 +634,11 @@
     // Render abbreviation grid
     function renderAbbreviations() {
       const grid = document.getElementById('abbr-grid');
-      grid.innerHTML = Object.entries(abbreviations).map(([abbr, data]) => `
-        <div class="abbr-item" onclick="showAbbrDetail('${abbr}')">
-          <strong>${abbr}</strong> — ${data.full}
-        </div>
-      `).join('');
+      grid.innerHTML = Object.entries(abbreviations).map(function(entry) {
+        var abbr = entry[0];
+        var data = entry[1];
+        return '<div class="abbr-item" onclick="showAbbrDetail(\'' + abbr + '\')"><strong>' + abbr + '</strong> — ' + data.full + '</div>';
+      }).join('');
     }
 
     // Show modal
