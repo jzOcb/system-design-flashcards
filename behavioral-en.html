@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behavioral 故事模板 | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .question-grid {
+      display: grid;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .question-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .question-card.active {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
+    }
+
+    .question-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+    }
+
+    .category-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .level-badge {
+      padding: 0.25rem 0.5rem;
+      background: var(--secondary-bg);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      font-size: 0.7rem;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0.75rem 0;
+    }
+
+    .companies {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    .detail-panel {
+      display: none;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--border);
+    }
+
+    .detail-panel.active {
+      display: block;
+    }
+
+    .star-section {
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background: var(--secondary-bg);
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .star-section h3 {
+      margin: 0 0 0.5rem 0;
+      color: var(--primary);
+      font-size: 1rem;
+    }
+
+    .star-section pre {
+      background: white;
+      padding: 1rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      margin: 0.5rem 0 0 0;
+    }
+
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .signal-item {
+      padding: 0.5rem;
+      background: var(--secondary-bg);
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .checklist-item {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: start;
+      gap: 0.5rem;
+    }
+
+    .checklist-item::before {
+      content: "✓";
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    .pitfall-item {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: start;
+      gap: 0.5rem;
+      color: #ef4444;
+    }
+
+    .pitfall-item::before {
+      content: "✗";
+      font-weight: bold;
+    }
+
+    .info-box {
+      background: #fef3c7;
+      border: 1px solid #fbbf24;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .info-box h4 {
+      margin: 0 0 0.5rem 0;
+      color: #92400e;
+    }
+
+    .level-guide {
+      margin: 1rem 0;
+    }
+
+    .level-item {
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      background: var(--secondary-bg);
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+
+    .level-item strong {
+      color: var(--primary);
+    }
+
+    .framework-section {
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(147, 51, 234, 0.05));
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 2rem 0;
+    }
+
+    .time-allocation {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .time-block {
+      text-align: center;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+    }
+
+    .time-block.highlight {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    .time-percentage {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .time-label {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin: 1rem 0;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
+    <div class="nav-links">
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html">Flashcards</a>
+      <a href="neetcode-en.html">NeetCode</a>
+      <a href="quiz-en.html">Quiz</a>
+      <a href="deepdive-en.html">Deep Dive</a>
+      <a href="behavioral-en.html" class="active">BQ</a>
+      <a href="calculator-en.html">Calc</a>
+      <a href="progress-en.html">Progress</a>
+      <a href="search-en.html" title="Search (⌘K)">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <a href="index-en.html" class="lang-btn">🇨🇳 中文</a>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+  <div class="container" style="max-width: 900px; margin: 2rem auto; padding: 0 1rem;">
+    <h1>Behavioral 故事模板</h1>
+    <p class="text-secondary">
+      基于 <em>Behavioral Interview Common Questions</em> 整理的常见问题、STAR 格式模板和最佳实践
+    </p>
+
+    <!-- STAR Framework Overview -->
+    <div class="framework-section">
+      <h2>STAR 框架 — 时间分配原则</h2>
+      <div class="time-allocation">
+        <div class="time-block">
+          <div class="time-percentage">10%</div>
+          <div class="time-label">Situation/Task<br>情境与任务</div>
+        </div>
+        <div class="time-block highlight">
+          <div class="time-percentage">60%</div>
+          <div class="time-label">Action<br>具体行动</div>
+        </div>
+        <div class="time-block">
+          <div class="time-percentage">20%</div>
+          <div class="time-label">Result<br>结果影响</div>
+        </div>
+        <div class="time-block">
+          <div class="time-percentage">10%</div>
+          <div class="time-label">Learning<br>学习反思</div>
+        </div>
+      </div>
+      <div class="info-box">
+        <h4>💡 核心原则</h4>
+        <p>
+          <strong>Action 是重点：</strong>面试官评估的是你采取的 <strong>可复用行动</strong>，而不是项目背景或最终结果。
+          60% 的时间应该用于详细描述你的思考过程和具体行动。
+        </p>
+      </div>
+    </div>
+
+    <h2>常见 Behavioral 问题</h2>
+    <p class="text-secondary">点击问题查看详细的 STAR 模板、评分标准和注意事项</p>
+
+    <div class="question-grid" id="questionGrid"></div>
+
+    <a href="index-en.html" class="back-link">← 返回首页</a>
+  </div>
+
+  <script src="behavioralData.js"></script>
+  <script>
+    const grid = document.getElementById('questionGrid');
+
+    BehavioralQuestions.forEach(q => {
+      const card = document.createElement('div');
+      card.className = 'question-card';
+      card.onclick = () => toggleDetail(card, q.id);
+
+      card.innerHTML = `
+        <div class="question-header">
+          <span class="category-badge">${q.category}</span>
+          <span class="level-badge">${q.level}</span>
+        </div>
+        <div class="question-text">${q.question}</div>
+        <div class="companies">📍 ${q.companies.join(', ')}</div>
+
+        <div class="detail-panel" id="detail-${q.id}">
+          <h3>🎯 面试官评估的核心信号</h3>
+          <div class="signals-grid">
+            ${q.keySignals.map(s => `<div class="signal-item">${s}</div>`).join('')}
+          </div>
+
+          <h3>📝 STAR 模板</h3>
+          <div class="star-section">
+            <h3>S — Situation (情境) — 10%</h3>
+            <pre>${q.starTemplate.situation}</pre>
+          </div>
+          <div class="star-section">
+            <h3>T — Task (任务) — 包含在Situation</h3>
+            <pre>${q.starTemplate.task}</pre>
+          </div>
+          <div class="star-section">
+            <h3>A — Action (行动) — 60% ⭐ 重点</h3>
+            <pre>${q.starTemplate.action}</pre>
+          </div>
+          <div class="star-section">
+            <h3>R — Result (结果 + 学习) — 30%</h3>
+            <pre>${q.starTemplate.result}</pre>
+          </div>
+
+          ${q.checklist ? `
+            <h3>✅ 自检清单</h3>
+            <div>
+              ${q.checklist.map(item => `<div class="checklist-item">${item}</div>`).join('')}
+            </div>
+          ` : ''}
+
+          ${q.avoidPitfalls ? `
+            <h3>⚠️ 避免的坑</h3>
+            <div>
+              ${q.avoidPitfalls.map(item => `<div class="pitfall-item">${item}</div>`).join('')}
+            </div>
+          ` : ''}
+
+          ${q.levelingGuide ? `
+            <h3>📊 Level 对应的故事范围</h3>
+            <div class="level-guide">
+              ${Object.entries(q.levelingGuide).map(([level, desc]) => `
+                <div class="level-item">
+                  <strong>${level}:</strong> ${desc}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${q.projectSelection ? `
+            <h3>🎯 项目选择维度</h3>
+            <div class="info-box">
+              <h4>三个核心维度：</h4>
+              <ul>
+                ${q.projectSelection.dimensions.map(d => `<li>${d}</li>`).join('')}
+              </ul>
+            </div>
+            <h4>各 Level 的项目范围：</h4>
+            <div class="level-guide">
+              ${Object.entries(q.projectSelection.levelGuide).map(([level, desc]) => `
+                <div class="level-item">
+                  <strong>${level}:</strong> ${desc}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${q.commonFollowUps ? `
+            <h3>🔄 常见追问</h3>
+            <ul>
+              ${q.commonFollowUps.map(f => `<li>${f}</li>`).join('')}
+            </ul>
+          ` : ''}
+
+          ${q.failureFrameworks ? `
+            <h3>🎭 Failure 的框架思路</h3>
+            <div class="info-box">
+              <h4>Goldilocks Zone: 选择有意义但可恢复的失败</h4>
+              <ul>
+                ${q.failureFrameworks.map(f => `<li>${f}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${q.goldilocksZone ? `
+            <div class="info-box" style="background: #fee2e2; border-color: #ef4444;">
+              <h4>⚖️ Goldilocks Zone（恰到好处的失败）</h4>
+              <p><strong>❌ Too Small:</strong> ${q.goldilocksZone.tooSmall}</p>
+              <p><strong>✅ Just Right:</strong> ${q.goldilocksZone.justRight}</p>
+              <p><strong>❌ Too Big:</strong> ${q.goldilocksZone.tooBig}</p>
+            </div>
+          ` : ''}
+
+          ${q.goodExamples ? `
+            <h4>✅ 好的失败示例：</h4>
+            <ul>
+              ${q.goodExamples.map(e => `<li>${e}</li>`).join('')}
+            </ul>
+          ` : ''}
+
+          ${q.riskExamples ? `
+            <h3>💡 Risk 示例（按 Level）</h3>
+            <div class="level-guide">
+              ${Object.entries(q.riskExamples).map(([level, example]) => `
+                <div class="level-item">
+                  <strong>${level}:</strong> ${example}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          ${q.mitigation ? `
+            <h3>🛡️ 风险缓解策略</h3>
+            <ul>
+              ${q.mitigation.map(m => `<li>${m}</li>`).join('')}
+            </ul>
+          ` : ''}
+
+          ${q.hardnessExamples ? `
+            <h3>🎯 "Hard" Feedback 的示例（按经验）</h3>
+            <div class="level-guide">
+              ${Object.entries(q.hardnessExamples).map(([stage, example]) => `
+                <div class="level-item">
+                  <strong>${stage}:</strong> ${example}
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    function toggleDetail(card, id) {
+      const wasActive = card.classList.contains('active');
+      
+      // Close all
+      document.querySelectorAll('.question-card').forEach(c => {
+        c.classList.remove('active');
+      });
+      document.querySelectorAll('.detail-panel').forEach(p => {
+        p.classList.remove('active');
+      });
+
+      // Open clicked (if wasn't already open)
+      if (!wasActive) {
+        card.classList.add('active');
+        document.getElementById(`detail-${id}`).classList.add('active');
+      }
+    }
+  </script>
+<script src="js/theme.js"></script>
+</body>
+</html>

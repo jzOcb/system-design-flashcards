@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Cases | System Design Interview Prep</title>
+    <link rel="stylesheet" href="css/minimal.css">
+    <style>
+        .cases-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .cases-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .filter-section {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .case-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
+        }
+        .case-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+        .case-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .case-category {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .category-product { background: #DBEAFE; color: #1E40AF; }
+        .category-infrastructure { background: #F3E8FF; color: #6B21A8; }
+        .difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+        .difficulty-medium { background: #FEF3C7; color: #92400E; }
+        .difficulty-hard { background: #FEE2E2; color: #991B1B; }
+        .case-preview {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+            line-height: 1.5;
+        }
+        .case-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
+    <div class="nav-links">
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html">Flashcards</a>
+      <a href="neetcode-en.html">NeetCode</a>
+      <a href="quiz-en.html">Quiz</a>
+      <a href="deepdive-en.html">Deep Dive</a>
+      <a href="behavioral-en.html">BQ</a>
+      <a href="calculator-en.html">Calc</a>
+      <a href="progress-en.html">Progress</a>
+      <a href="search-en.html" title="Search (⌘K)">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <a href="cases.html" class="lang-btn">🇨🇳 中文</a>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+    <div class="cases-container">
+        <div class="cases-header">
+            <h1>🏗️ System Design Cases</h1>
+            <p style="color: var(--text-secondary);">Detailed analysis of classic system design interview questions</p>
+        </div>
+
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="product">Product Design</button>
+            <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
+            <button class="filter-btn" data-filter="medium">Medium</button>
+            <button class="filter-btn" data-filter="hard">Hard</button>
+        </div>
+
+        <div class="cases-grid" id="casesGrid"></div>
+    </div>
+
+    <script src="casesData-en.js"></script>
+    <script>
+        const casesGrid = document.getElementById('casesGrid');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        function renderCases(filter = 'all') {
+            casesGrid.innerHTML = '';
+            
+            const filteredCases = casesData.cases.filter(c => {
+                if (filter === 'all') return true;
+                if (filter === 'product') return c.category === 'Product Design';
+                if (filter === 'infrastructure') return c.category === 'Infrastructure Design';
+                if (filter === 'medium') return c.difficulty === 'Medium';
+                if (filter === 'hard') return c.difficulty === 'Hard';
+                return true;
+            });
+
+            filteredCases.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'case-card';
+                card.onclick = () => location.href = 'case-detail-en.html?id=' + c.id;
+
+                const catClass = c.category === 'Product Design' ? 'category-product' : 'category-infrastructure';
+                const diffClass = c.difficulty === 'Medium' ? 'difficulty-medium' : 'difficulty-hard';
+
+                card.innerHTML = `
+                    <div class="case-title">${c.title}</div>
+                    <span class="case-category ${catClass}">${c.category}</span>
+                    <span class="difficulty ${diffClass}">${c.difficulty}</span>
+                    <div class="case-preview">${c.requirements.functional[0]}</div>
+                    <div class="case-stats">
+                        <span>📋 ${c.requirements.functional.length} Requirements</span>
+                        <span>🔍 ${c.deep_dives.length} Deep Dives</span>
+                    </div>
+                `;
+                casesGrid.appendChild(card);
+            });
+        }
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderCases(btn.dataset.filter);
+            });
+        });
+
+        renderCases();
+    </script>
+    <script src="js/shortcuts.js"></script>
+</body>
+</html>

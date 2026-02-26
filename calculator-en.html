@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>估算计算器 | System Design 面试速成</title>
+  <meta name="description" content="System Design 面试常用估算计算器：QPS、存储、带宽、峰值">
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .calculator-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .calc-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+    }
+
+    .calc-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
+
+    .calc-formula {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-family: 'Courier New', monospace;
+      background: var(--bg);
+      padding: 0.5rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+    }
+
+    .input-group {
+      margin-bottom: 1rem;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .result-box {
+      background: var(--primary);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .result-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .result-label {
+      font-size: 0.85rem;
+      color: var(--text);
+      opacity: 0.8;
+      margin-top: 0.25rem;
+    }
+
+    .cheatsheet {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .cheatsheet-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .cheatsheet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .cheatsheet-item {
+      background: var(--bg);
+      padding: 0.75rem;
+      border-radius: 6px;
+    }
+
+    .cheatsheet-key {
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .cheatsheet-value {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .cheatsheet-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
+    <div class="nav-links">
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html">Flashcards</a>
+      <a href="neetcode-en.html">NeetCode</a>
+      <a href="quiz-en.html">Quiz</a>
+      <a href="deepdive-en.html">Deep Dive</a>
+      <a href="behavioral-en.html">BQ</a>
+      <a href="calculator-en.html" class="active">Calc</a>
+      <a href="progress-en.html">Progress</a>
+      <a href="search-en.html" title="Search (⌘K)">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <a href="index-en.html" class="lang-btn">🇨🇳 中文</a>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+  <main class="calculator-container">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem;">估算计算器</h1>
+      <p style="color: var(--text-secondary);">System Design 面试常用的快速估算工具</p>
+    </div>
+
+    <!-- 常用数字速查 -->
+    <div class="cheatsheet">
+      <div class="cheatsheet-title">📊 常用数字速查</div>
+      <div class="cheatsheet-grid">
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-key">1 天</div>
+          <div class="cheatsheet-value">86400 秒 ≈ 10<sup>5</sup> 秒</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-key">1 年</div>
+          <div class="cheatsheet-value">≈ 3×10<sup>7</sup> 秒</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-key">1 KB</div>
+          <div class="cheatsheet-value">≈ 1000 字符</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-key">1 Gbps</div>
+          <div class="cheatsheet-value">≈ 125 MB/s</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-key">1 GB</div>
+          <div class="cheatsheet-value">10<sup>9</sup> 字节</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-key">1 TB</div>
+          <div class="cheatsheet-value">10<sup>12</sup> 字节</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 计算器网格 -->
+    <div class="calculator-grid">
+      <!-- QPS 计算器 -->
+      <div class="calc-card">
+        <div class="calc-title">⚡ QPS 计算器</div>
+        <div class="calc-formula">QPS = DAU × 每用户请求数 / 86400</div>
+        
+        <div class="input-group">
+          <label class="input-label">DAU (日活跃用户数)</label>
+          <input type="number" id="qps-dau" class="input-field" placeholder="例如: 1000000" value="1000000">
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">每用户请求数/天</label>
+          <input type="number" id="qps-requests" class="input-field" placeholder="例如: 10" value="10">
+        </div>
+        
+        <div class="result-box">
+          <div class="result-value" id="qps-result">115.74</div>
+          <div class="result-label">请求/秒 (QPS)</div>
+        </div>
+      </div>
+
+      <!-- 存储计算器 -->
+      <div class="calc-card">
+        <div class="calc-title">💾 存储计算器</div>
+        <div class="calc-formula">存储 = 用户数 × 每用户数据大小</div>
+        
+        <div class="input-group">
+          <label class="input-label">用户数</label>
+          <input type="number" id="storage-users" class="input-field" placeholder="例如: 1000000" value="1000000">
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">每用户数据大小 (KB)</label>
+          <input type="number" id="storage-size" class="input-field" placeholder="例如: 100" value="100">
+        </div>
+        
+        <div class="result-box">
+          <div class="result-value" id="storage-result">100 GB</div>
+          <div class="result-label">总存储空间</div>
+        </div>
+      </div>
+
+      <!-- 带宽计算器 -->
+      <div class="calc-card">
+        <div class="calc-title">🌐 带宽计算器</div>
+        <div class="calc-formula">带宽 = QPS × 请求大小</div>
+        
+        <div class="input-group">
+          <label class="input-label">QPS (请求/秒)</label>
+          <input type="number" id="bandwidth-qps" class="input-field" placeholder="例如: 1000" value="1000">
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">请求大小 (KB)</label>
+          <input type="number" id="bandwidth-size" class="input-field" placeholder="例如: 10" value="10">
+        </div>
+        
+        <div class="result-box">
+          <div class="result-value" id="bandwidth-result">10 MB/s</div>
+          <div class="result-label">带宽需求</div>
+        </div>
+      </div>
+
+      <!-- 峰值计算器 -->
+      <div class="calc-card">
+        <div class="calc-title">📈 峰值计算器</div>
+        <div class="calc-formula">峰值 = 平均值 × 峰值倍数</div>
+        
+        <div class="input-group">
+          <label class="input-label">平均值</label>
+          <input type="number" id="peak-avg" class="input-field" placeholder="例如: 1000" value="1000">
+        </div>
+        
+        <div class="input-group">
+          <label class="input-label">峰值倍数</label>
+          <input type="number" id="peak-multiplier" class="input-field" placeholder="例如: 3" value="3" step="0.1">
+        </div>
+        
+        <div class="result-box">
+          <div class="result-value" id="peak-result">3000</div>
+          <div class="result-label">峰值</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 使用提示 -->
+    <div class="cheatsheet">
+      <div class="cheatsheet-title">💡 使用提示</div>
+      <ul style="list-style: none; padding: 0;">
+        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+          <strong>QPS 计算：</strong> 用于估算系统每秒需要处理多少请求
+        </li>
+        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+          <strong>存储计算：</strong> 用于估算需要多少磁盘空间
+        </li>
+        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+          <strong>带宽计算：</strong> 用于估算网络带宽需求
+        </li>
+        <li style="padding: 0.5rem 0;">
+          <strong>峰值计算：</strong> 考虑高峰期流量（通常是平均的 2-5 倍）
+        </li>
+      </ul>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p class="footer-tagline">面试不是背答案，是讲清楚权衡</p>
+    <p class="footer-desc">
+      快速估算是 System Design 面试的重要环节。
+      使用这些计算器可以帮助你快速得出合理的数字，并验证你的系统设计是否可行。
+    </p>
+  </footer>
+
+  <script>
+    // QPS 计算器
+    function calculateQPS() {
+      const dau = parseFloat(document.getElementById('qps-dau').value) || 0;
+      const requests = parseFloat(document.getElementById('qps-requests').value) || 0;
+      const qps = (dau * requests) / 86400;
+      document.getElementById('qps-result').textContent = qps.toFixed(2);
+    }
+
+    // 存储计算器
+    function calculateStorage() {
+      const users = parseFloat(document.getElementById('storage-users').value) || 0;
+      const sizeKB = parseFloat(document.getElementById('storage-size').value) || 0;
+      const totalKB = users * sizeKB;
+      
+      let result;
+      if (totalKB < 1024) {
+        result = totalKB.toFixed(2) + ' KB';
+      } else if (totalKB < 1024 * 1024) {
+        result = (totalKB / 1024).toFixed(2) + ' MB';
+      } else if (totalKB < 1024 * 1024 * 1024) {
+        result = (totalKB / (1024 * 1024)).toFixed(2) + ' GB';
+      } else {
+        result = (totalKB / (1024 * 1024 * 1024)).toFixed(2) + ' TB';
+      }
+      
+      document.getElementById('storage-result').textContent = result;
+    }
+
+    // 带宽计算器
+    function calculateBandwidth() {
+      const qps = parseFloat(document.getElementById('bandwidth-qps').value) || 0;
+      const sizeKB = parseFloat(document.getElementById('bandwidth-size').value) || 0;
+      const bandwidthKB = qps * sizeKB;
+      
+      let result;
+      if (bandwidthKB < 1024) {
+        result = bandwidthKB.toFixed(2) + ' KB/s';
+      } else if (bandwidthKB < 1024 * 1024) {
+        result = (bandwidthKB / 1024).toFixed(2) + ' MB/s';
+      } else {
+        result = (bandwidthKB / (1024 * 1024)).toFixed(2) + ' GB/s';
+      }
+      
+      document.getElementById('bandwidth-result').textContent = result;
+    }
+
+    // 峰值计算器
+    function calculatePeak() {
+      const avg = parseFloat(document.getElementById('peak-avg').value) || 0;
+      const multiplier = parseFloat(document.getElementById('peak-multiplier').value) || 1;
+      const peak = avg * multiplier;
+      document.getElementById('peak-result').textContent = peak.toFixed(2);
+    }
+
+    // 添加事件监听器
+    document.getElementById('qps-dau').addEventListener('input', calculateQPS);
+    document.getElementById('qps-requests').addEventListener('input', calculateQPS);
+    
+    document.getElementById('storage-users').addEventListener('input', calculateStorage);
+    document.getElementById('storage-size').addEventListener('input', calculateStorage);
+    
+    document.getElementById('bandwidth-qps').addEventListener('input', calculateBandwidth);
+    document.getElementById('bandwidth-size').addEventListener('input', calculateBandwidth);
+    
+    document.getElementById('peak-avg').addEventListener('input', calculatePeak);
+    document.getElementById('peak-multiplier').addEventListener('input', calculatePeak);
+
+    // 初始计算
+    calculateQPS();
+    calculateStorage();
+    calculateBandwidth();
+    calculatePeak();
+  </script>
+</body>
+</html>

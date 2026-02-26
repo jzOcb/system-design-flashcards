@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeetCode 150 | LeetCode Interview Roadmap</title>
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .nc-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .nc-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .nc-header h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .nc-stats {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .nc-stat {
+      text-align: center;
+    }
+    .nc-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+    .nc-stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .nc-progress-bar {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .nc-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+      transition: width 0.3s;
+    }
+    .nc-category {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+    .nc-category-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nc-category-header:hover {
+      background: var(--bg);
+    }
+    .nc-category-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    .nc-category-icon {
+      font-size: 1.25rem;
+    }
+    .nc-category-count {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .nc-category-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .nc-problems {
+      display: none;
+      padding: 0 1.5rem 1rem;
+    }
+    .nc-category.expanded .nc-problems {
+      display: block;
+    }
+    .nc-category.expanded .nc-expand-icon {
+      transform: rotate(180deg);
+    }
+    .nc-problem {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .nc-problem:last-child {
+      border-bottom: none;
+    }
+    .nc-problem-check {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      margin-right: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .nc-problem-check.done {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+    .nc-problem-info {
+      flex: 1;
+    }
+    .nc-problem-name {
+      font-weight: 500;
+    }
+    .nc-problem-meta {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.25rem;
+    }
+    .nc-difficulty {
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+    .nc-difficulty.easy { background: #D1FAE5; color: #065F46; }
+    .nc-difficulty.medium { background: #FEF3C7; color: #92400E; }
+    .nc-difficulty.hard { background: #FEE2E2; color: #991B1B; }
+    .nc-problem-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+    }
+    .nc-problem-link:hover {
+      text-decoration: underline;
+    }
+    .nc-tips {
+      margin-top: 2rem;
+    }
+    .nc-tip {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1rem 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+    .nc-tip-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .nc-tip-content {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .nc-expand-icon {
+      transition: transform 0.2s;
+    }
+    .nc-filter {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .nc-filter-btn {
+      padding: 0.4rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card-bg);
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .nc-filter-btn:hover, .nc-filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
+    <div class="nav-links">
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html">Flashcards</a>
+      <a href="neetcode-en.html" class="active">NeetCode</a>
+      <a href="quiz-en.html">Quiz</a>
+      <a href="deepdive-en.html">Deep Dive</a>
+      <a href="behavioral-en.html">BQ</a>
+      <a href="calculator-en.html">Calc</a>
+      <a href="progress-en.html">Progress</a>
+      <a href="search-en.html" title="Search (⌘K)">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <a href="index-en.html" class="lang-btn">🇨🇳 中文</a>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+  <div class="nc-container">
+    <div class="nc-header">
+      <h1>🎯 NeetCode 150</h1>
+      <p style="color: var(--text-secondary);">The essential LeetCode problems for coding interviews</p>
+      
+      <div class="nc-stats">
+        <div class="nc-stat">
+          <div class="nc-stat-value" id="total-done">0</div>
+          <div class="nc-stat-label">Completed</div>
+        </div>
+        <div class="nc-stat">
+          <div class="nc-stat-value" id="total-problems">144</div>
+          <div class="nc-stat-label">Problems</div>
+        </div>
+        <div class="nc-stat">
+          <div class="nc-stat-value">15</div>
+          <div class="nc-stat-label">Categories</div>
+        </div>
+      </div>
+
+      <div class="nc-progress-bar">
+        <div class="nc-progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary);" id="progress-text">0% complete</p>
+    </div>
+
+    <div class="nc-filter">
+      <button class="nc-filter-btn active" data-filter="all" onclick="filterProblems('all')">All</button>
+      <button class="nc-filter-btn" data-filter="todo" onclick="filterProblems('todo')">To Do</button>
+      <button class="nc-filter-btn" data-filter="done" onclick="filterProblems('done')">Done</button>
+      <button class="nc-filter-btn" data-filter="easy" onclick="filterProblems('easy')">Easy</button>
+      <button class="nc-filter-btn" data-filter="medium" onclick="filterProblems('medium')">Medium</button>
+      <button class="nc-filter-btn" data-filter="hard" onclick="filterProblems('hard')">Hard</button>
+    </div>
+
+    <div id="categories"></div>
+
+    <div class="nc-tips">
+      <h2 style="margin-bottom: 1rem;">💡 Study Tips</h2>
+      <div id="tips"></div>
+    </div>
+  </div>
+
+  <script src="neetcodeData.js"></script>
+  <script>
+    // Load progress from localStorage
+    let progress = JSON.parse(localStorage.getItem('neetcode-progress') || '{}');
+
+    function saveProgress() {
+      localStorage.setItem('neetcode-progress', JSON.stringify(progress));
+      updateStats();
+    }
+
+    function toggleProblem(id) {
+      progress[id] = !progress[id];
+      saveProgress();
+      renderCategories();
+    }
+
+    function toggleCategory(categoryId) {
+      const el = document.querySelector(`[data-category="${categoryId}"]`);
+      el.classList.toggle('expanded');
+    }
+
+    function updateStats() {
+      const done = Object.values(progress).filter(v => v).length;
+      const total = NeetCodeData.stats.total;
+      const percent = Math.round((done / total) * 100);
+      
+      document.getElementById('total-done').textContent = done;
+      document.getElementById('progress-fill').style.width = `${percent}%`;
+      document.getElementById('progress-text').textContent = `${percent}% complete`;
+    }
+
+    let currentFilter = 'all';
+
+    function filterProblems(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.nc-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.filter === filter);
+      });
+      renderCategories();
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categories');
+      container.innerHTML = NeetCodeData.categories.map(cat => {
+        let problems = cat.problems;
+        
+        // Apply filter
+        if (currentFilter === 'todo') {
+          problems = problems.filter(p => !progress[p.id]);
+        } else if (currentFilter === 'done') {
+          problems = problems.filter(p => progress[p.id]);
+        } else if (['easy', 'medium', 'hard'].includes(currentFilter)) {
+          problems = problems.filter(p => p.difficulty.toLowerCase() === currentFilter);
+        }
+
+        if (problems.length === 0) return '';
+
+        const doneCount = cat.problems.filter(p => progress[p.id]).length;
+        
+        return `
+          <div class="nc-category" data-category="${cat.id}">
+            <div class="nc-category-header" onclick="toggleCategory('${cat.id}')">
+              <div class="nc-category-title">
+                <span class="nc-category-icon">${cat.icon}</span>
+                <span>${cat.name}</span>
+                <span class="nc-category-count">(${problems.length})</span>
+              </div>
+              <div class="nc-category-progress">
+                <span>${doneCount}/${cat.problems.length}</span>
+                <span class="nc-expand-icon">▼</span>
+              </div>
+            </div>
+            <div class="nc-problems">
+              <p style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 1rem;">${cat.description}</p>
+              ${problems.map(p => `
+                <div class="nc-problem">
+                  <div class="nc-problem-check ${progress[p.id] ? 'done' : ''}" onclick="toggleProblem(${p.id})">
+                    ${progress[p.id] ? '✓' : ''}
+                  </div>
+                  <div class="nc-problem-info">
+                    <div class="nc-problem-name">${p.name}</div>
+                    <div class="nc-problem-meta">
+                      <span class="nc-difficulty ${p.difficulty.toLowerCase()}">${p.difficulty}</span>
+                      <span>Pattern: ${p.pattern}</span>
+                      <a href="https://leetcode.com/problems/${p.name.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '')}/" target="_blank" class="nc-problem-link">LC #${p.leetcode}</a>
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTips() {
+      document.getElementById('tips').innerHTML = NeetCodeData.tips.map(tip => `
+        <div class="nc-tip">
+          <div class="nc-tip-title">${tip.title}</div>
+          <div class="nc-tip-content">${tip.content}</div>
+        </div>
+      `).join('');
+    }
+
+    // Initial render
+    renderCategories();
+    renderTips();
+    updateStats();
+  </script>
+<script src="js/theme.js"></script>
+<script src="js/shortcuts.js"></script>
+</body>
+</html>

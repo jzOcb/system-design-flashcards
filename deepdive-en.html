@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Dive | System Design 面试速成</title>
+  <link rel="stylesheet" href="css/minimal.css">
+  <style>
+    .dd-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .dd-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .dd-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dd-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .dd-card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .dd-card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .dd-card-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    
+    /* Detail view */
+    .dd-detail {
+      display: none;
+    }
+    .dd-detail.active {
+      display: block;
+    }
+    .dd-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+    }
+    .dd-back:hover {
+      color: var(--primary-dark);
+    }
+    .dd-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .dd-header-icon {
+      font-size: 3rem;
+    }
+    .dd-header-title {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    .dd-header-subtitle {
+      color: var(--text-secondary);
+    }
+    .dd-section {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      scroll-margin-top: 80px;
+    }
+    .dd-section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+    }
+    .dd-section-content {
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+    .dd-section-content code {
+      background: var(--bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    .dd-toc {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .dd-toc-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .dd-toc-item {
+      display: block;
+      padding: 0.5rem 0;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+    }
+    .dd-toc-item:last-child {
+      border-bottom: none;
+    }
+    .dd-toc-item:hover {
+      color: var(--primary-dark);
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index-en.html" class="nav-brand">SD Interview Prep</a>
+    <div class="nav-links">
+      <a href="learn-en.html">Learn</a>
+      <a href="flashcard-en.html">Flashcards</a>
+      <a href="neetcode-en.html">NeetCode</a>
+      <a href="quiz-en.html">Quiz</a>
+      <a href="deepdive-en.html" class="active">Deep Dive</a>
+      <a href="behavioral-en.html">BQ</a>
+      <a href="calculator-en.html">Calc</a>
+      <a href="progress-en.html">Progress</a>
+      <a href="search-en.html" title="Search (⌘K)">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+      <a href="index-en.html" class="lang-btn">🇨🇳 中文</a>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+  <div class="dd-container">
+    <!-- List View -->
+    <div id="list-view">
+      <h1 style="margin-bottom: 0.5rem;">Deep Dive 技术文档</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+        深入了解面试常考的核心技术组件
+      </p>
+      
+      <div class="dd-grid" id="dd-grid">
+        <!-- JS 动态生成 -->
+      </div>
+    </div>
+
+    <!-- Detail View -->
+    <div id="detail-view" class="dd-detail">
+      <span class="dd-back" onclick="showList()">← 返回列表</span>
+      
+      <div class="dd-header">
+        <span class="dd-header-icon" id="detail-icon">🔴</span>
+        <div>
+          <div class="dd-header-title" id="detail-title">Redis</div>
+          <div class="dd-header-subtitle" id="detail-subtitle">内存数据结构存储</div>
+        </div>
+      </div>
+
+      <div class="dd-toc" id="toc">
+        <!-- JS 动态生成 -->
+      </div>
+
+      <div id="sections">
+        <!-- JS 动态生成 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="deepdiveData.js"></script>
+  <script>
+    function renderList() {
+      const grid = document.getElementById('dd-grid');
+      grid.innerHTML = DeepDiveData.map(item => `
+        <div class="dd-card" onclick="showDetail('${item.id}')">
+          <div class="dd-card-icon">${item.icon}</div>
+          <div class="dd-card-title">${item.title}</div>
+          <div class="dd-card-subtitle">${item.subtitle}</div>
+        </div>
+      `).join('');
+    }
+
+    function showDetail(id) {
+      const item = DeepDiveData.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById('detail-icon').textContent = item.icon;
+      document.getElementById('detail-title').textContent = item.title;
+      document.getElementById('detail-subtitle').textContent = item.subtitle;
+
+      // TOC
+      document.getElementById('toc').innerHTML = `
+        <div class="dd-toc-title">目录</div>
+        ${item.sections.map((s, i) => `
+          <a class="dd-toc-item" href="#section-${i}">${s.title}</a>
+        `).join('')}
+      `;
+
+      // Sections
+      document.getElementById('sections').innerHTML = item.sections.map((s, i) => `
+        <div class="dd-section" id="section-${i}">
+          <div class="dd-section-title">${s.title}</div>
+          <div class="dd-section-content">${formatContent(s.content)}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('list-view').style.display = 'none';
+      document.getElementById('detail-view').classList.add('active');
+    }
+
+    function showList() {
+      document.getElementById('list-view').style.display = 'block';
+      document.getElementById('detail-view').classList.remove('active');
+    }
+
+    function formatContent(text) {
+      // 简单的 markdown 处理
+      return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`(.+?)`/g, '<code>$1</code>');
+    }
+
+    // 检查 URL hash
+    const hash = window.location.hash.slice(1);
+    if (hash && DeepDiveData.find(d => d.id === hash)) {
+      showDetail(hash);
+    }
+
+    renderList();
+  </script>
+<script src="js/theme.js"></script>
+<script src="js/shortcuts.js"></script>
+</body>
+</html>
