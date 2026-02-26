@@ -1,4 +1,4 @@
-// Theme Management
+// Theme Management - Apply immediately to prevent flash
 (function() {
   const THEME_KEY = 'sd-theme';
   
@@ -9,18 +9,22 @@
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
-  // Apply theme
+  // Apply theme immediately
   function setTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
-    updateToggleIcon();
   }
 
+  // Apply saved theme IMMEDIATELY (before DOM ready)
+  setTheme(getPreferredTheme());
+
   // Toggle between light/dark
-  function toggleTheme() {
+  window.toggleTheme = function() {
     const current = document.documentElement.getAttribute('data-theme') || 'light';
-    setTheme(current === 'dark' ? 'light' : 'dark');
-  }
+    const newTheme = current === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    updateToggleIcon();
+  };
 
   // Update toggle button icon
   function updateToggleIcon() {
@@ -28,29 +32,22 @@
     if (btn) {
       const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
       btn.textContent = isDark ? '☀️' : '🌙';
-      btn.title = isDark ? '切换到亮色模式' : '切换到暗色模式';
+      btn.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
     }
   }
 
-  // Initialize on page load
-  function init() {
-    setTheme(getPreferredTheme());
-    
-    // Listen for system preference changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (!localStorage.getItem(THEME_KEY)) {
-        setTheme(e.matches ? 'dark' : 'light');
-      }
-    });
-  }
-
-  // Expose to global
-  window.toggleTheme = toggleTheme;
-
-  // Run init
+  // Update icon when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', updateToggleIcon);
   } else {
-    init();
+    updateToggleIcon();
   }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem(THEME_KEY)) {
+      setTheme(e.matches ? 'dark' : 'light');
+      updateToggleIcon();
+    }
+  });
 })();
