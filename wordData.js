@@ -160,7 +160,12 @@ const WordRoots = [
       "Sliding Window：Redis ZSET 存时间戳",
       "响应头：X-RateLimit-Remaining: 95"
     ],
-    videoId: "MIJFyUPG4Z4"
+    videoId: "MIJFyUPG4Z4",
+    quiz: {
+      question: "以下哪种限流算法可以允许短时间的突发流量？",
+      options: ["Leaky Bucket（漏桶）", "Token Bucket（令牌桶）", "Fixed Window（固定窗口）", "Sliding Window（滑动窗口）"],
+      correctAnswer: 1
+    }
   },
   {
     id: 10,
@@ -173,7 +178,12 @@ const WordRoots = [
       "Pull：读取 feed → 查询关注者最新帖子 → 合并排序",
       "混合：粉丝 < 1000 用 Push，否则 Pull"
     ],
-    videoId: "Qj4-GruzyDU"
+    videoId: "Qj4-GruzyDU",
+    quiz: {
+      question: "在 News Feed 设计中，为什么大 V（百万粉丝）通常采用 Pull 模式？",
+      options: ["Pull 模式速度更快", "避免发帖时写入百万条记录（写放大）", "Pull 模式更省内存", "方便做个性化推荐"],
+      correctAnswer: 1
+    }
   },
   {
     id: 11,
@@ -186,7 +196,12 @@ const WordRoots = [
       "7 位短码：62^7 ≈ 3.5 万亿组合",
       "缓存：热门短链 99% 命中率"
     ],
-    videoId: "36Fg5Akhkqw"
+    videoId: "36Fg5Akhkqw",
+    quiz: {
+      question: "为什么 URL Shortener 使用 Base62 编码而不是 Base64？",
+      options: ["Base62 编码更短", "Base62 避免了 URL 中的特殊字符（+/=）", "Base62 计算速度更快", "Base62 安全性更高"],
+      correctAnswer: 1
+    }
   },
   {
     id: 12,
@@ -199,7 +214,12 @@ const WordRoots = [
       "转码：1080p, 720p, 480p, 360p",
       "HLS：.m3u8 索引 + .ts 分片"
     ],
-    videoId: "Youtube System Design"
+    videoId: "Youtube System Design",
+    quiz: {
+      question: "视频流媒体系统中，HLS（HTTP Live Streaming）的主要作用是什么？",
+      options: ["加密视频内容", "实现自适应码率播放", "压缩视频大小", "防止视频被下载"],
+      correctAnswer: 1
+    }
   },
   {
     id: 13,
@@ -212,7 +232,12 @@ const WordRoots = [
       "消息结构：{msg_id, sender, receiver, content, timestamp}",
       "离线消息：SQLite 本地存储 + 服务端同步"
     ],
-    videoId: "Design Whatsapp"
+    videoId: "Design Whatsapp",
+    quiz: {
+      question: "即时通讯系统为什么使用 WebSocket 而不是 HTTP 轮询？",
+      options: ["WebSocket 安全性更高", "WebSocket 支持双向实时通信，减少延迟和资源消耗", "WebSocket 传输速度更快", "HTTP 不支持消息推送"],
+      correctAnswer: 1
+    }
   },
   {
     id: 14,
@@ -225,7 +250,12 @@ const WordRoots = [
       "附近司机：GEORADIUS drivers lng lat 5 km",
       "ETA 计算：Google Maps API / 自建路网图"
     ],
-    videoId: "Design Uber"
+    videoId: "Design Uber",
+    quiz: {
+      question: "Uber 系统中，Redis GEO 数据结构用于什么场景？",
+      options: ["存储用户订单历史", "快速查询附近的司机", "计算车费", "管理司机评分"],
+      correctAnswer: 1
+    }
   },
   {
     id: 15,
@@ -238,7 +268,12 @@ const WordRoots = [
       "订单队列：RabbitMQ / Kafka 异步处理",
       "分布式锁：SET lock NX EX 10"
     ],
-    videoId: "Design Ticketmaster"
+    videoId: "Design Ticketmaster",
+    quiz: {
+      question: "秒杀系统中，为什么要先在 Redis 扣库存，再异步写数据库？",
+      options: ["Redis 更便宜", "避免数据库高并发写入压力，保证扣库存操作的原子性", "Redis 存储更可靠", "数据库不支持原子操作"],
+      correctAnswer: 1
+    }
   },
   {
     id: 16,
@@ -251,7 +286,12 @@ const WordRoots = [
       "robots.txt：遵守 Crawl-delay 和 Disallow",
       "URL Frontier：优先级队列 + 域名队列"
     ],
-    videoId: "Design a Web Crawler"
+    videoId: "Design a Web Crawler",
+    quiz: {
+      question: "Web Crawler 使用 Bloom Filter 的主要目的是什么？",
+      options: ["加快 URL 下载速度", "节省内存的同时判断 URL 是否已爬取", "解析网页内容", "遵守 robots.txt"],
+      correctAnswer: 1
+    }
   },
   {
     id: 17,
