@@ -1,309 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Design Cases - Hello Interview</title>
+    <title>Design 案例 | System Design 面试速成</title>
+    <link rel="stylesheet" href="css/minimal.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        .cases-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        header {
+        .cases-header {
             text-align: center;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #667eea;
+            margin-bottom: 2rem;
         }
-
-        h1 {
-            color: #667eea;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
         .filter-section {
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
             flex-wrap: wrap;
+            justify-content: center;
         }
-
         .filter-btn {
-            padding: 10px 20px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 20px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
-
-        .filter-btn:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .filter-btn.active {
-            background: #667eea;
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
             color: white;
         }
-
         .cases-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
         }
-
         .case-card {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 25px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 1.25rem;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            transition: all 0.2s;
+            border: 1px solid var(--border);
         }
-
         .case-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
-            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
         }
-
-        .case-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 15px;
-        }
-
         .case-title {
-            font-size: 1.4rem;
-            color: #333;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
         }
-
         .case-category {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .category-product {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .category-infrastructure {
-            background: #f3e5f5;
-            color: #7b1fa2;
-        }
-
-        .difficulty {
-            padding: 4px 10px;
+            padding: 0.2rem 0.6rem;
             border-radius: 12px;
             font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .category-product { background: #DBEAFE; color: #1E40AF; }
+        .category-infrastructure { background: #F3E8FF; color: #6B21A8; }
+        .difficulty {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-top: 5px;
+            margin-left: 0.5rem;
         }
-
-        .difficulty-medium {
-            background: #fff3cd;
-            color: #856404;
-        }
-
-        .difficulty-hard {
-            background: #f8d7da;
-            color: #721c24;
-        }
-
+        .difficulty-medium { background: #FEF3C7; color: #92400E; }
+        .difficulty-hard { background: #FEE2E2; color: #991B1B; }
         .case-preview {
-            color: #666;
-            font-size: 0.95rem;
-            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.75rem;
+            line-height: 1.5;
         }
-
         .case-stats {
             display: flex;
-            gap: 15px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-            font-size: 0.85rem;
-            color: #888;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: #764ba2;
-            transform: translateX(-5px);
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .cases-grid {
-                grid-template-columns: 1fr;
-            }
+            gap: 1rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="index.html" class="back-link">← Back to Home</a>
-        
-        <header>
-            <h1>System Design Cases</h1>
-            <p class="subtitle">Interactive guides for common system design interview questions</p>
-        </header>
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">SD 面试速成</a>
+    <div class="nav-links">
+      <a href="learn.html">学习</a>
+      <a href="flashcard.html">闪卡</a>
+      <a href="neetcode.html">NeetCode</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="deepdive.html">深入</a>
+      <a href="behavioral.html">BQ</a>
+      <a href="calculator.html">计算</a>
+      <a href="progress.html">进度</a>
+      <a href="search.html" title="搜索 (⌘K)">🔍</a>
+      <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题">🌙</button>
+      <a href="index-en.html" class="lang-btn">🇺🇸 EN</a>
+    </div>
+  </nav>
+  <script src="js/theme.js"></script>
+
+    <div class="cases-container">
+        <div class="cases-header">
+            <h1>🏗️ System Design 案例</h1>
+            <p style="color: var(--text-secondary);">经典系统设计面试题的详细分析</p>
+        </div>
 
         <div class="filter-section">
-            <button class="filter-btn active" data-filter="all">All Cases</button>
-            <button class="filter-btn" data-filter="product">Product Design</button>
-            <button class="filter-btn" data-filter="infrastructure">Infrastructure Design</button>
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="product">产品设计</button>
+            <button class="filter-btn" data-filter="infrastructure">基础架构</button>
             <button class="filter-btn" data-filter="medium">Medium</button>
             <button class="filter-btn" data-filter="hard">Hard</button>
         </div>
 
-        <div class="cases-grid" id="casesGrid">
-            <!-- Cases will be dynamically loaded here -->
-        </div>
+        <div class="cases-grid" id="casesGrid"></div>
     </div>
 
     <script src="casesData.js"></script>
     <script>
         const casesGrid = document.getElementById('casesGrid');
         const filterButtons = document.querySelectorAll('.filter-btn');
-        
-        let currentFilter = 'all';
 
-        // Render cases
         function renderCases(filter = 'all') {
             casesGrid.innerHTML = '';
             
-            const filteredCases = casesData.cases.filter(caseItem => {
+            const filteredCases = casesData.cases.filter(c => {
                 if (filter === 'all') return true;
-                if (filter === 'product') return caseItem.category === 'Product Design';
-                if (filter === 'infrastructure') return caseItem.category === 'Infrastructure Design';
-                if (filter === 'medium') return caseItem.difficulty === 'Medium';
-                if (filter === 'hard') return caseItem.difficulty === 'Hard';
+                if (filter === 'product') return c.category === 'Product Design';
+                if (filter === 'infrastructure') return c.category === 'Infrastructure Design';
+                if (filter === 'medium') return c.difficulty === 'Medium';
+                if (filter === 'hard') return c.difficulty === 'Hard';
                 return true;
             });
 
-            filteredCases.forEach(caseItem => {
-                const caseCard = createCaseCard(caseItem);
-                casesGrid.appendChild(caseCard);
+            filteredCases.forEach(c => {
+                const card = document.createElement('div');
+                card.className = 'case-card';
+                card.onclick = () => location.href = 'case-detail.html?id=' + c.id;
+
+                const catClass = c.category === 'Product Design' ? 'category-product' : 'category-infrastructure';
+                const diffClass = c.difficulty === 'Medium' ? 'difficulty-medium' : 'difficulty-hard';
+                const catLabel = c.category === 'Product Design' ? '产品设计' : '基础架构';
+
+                card.innerHTML = `
+                    <div class="case-title">${c.title}</div>
+                    <span class="case-category ${catClass}">${catLabel}</span>
+                    <span class="difficulty ${diffClass}">${c.difficulty}</span>
+                    <div class="case-preview">${c.requirements.functional[0]}</div>
+                    <div class="case-stats">
+                        <span>📋 ${c.requirements.functional.length} 需求</span>
+                        <span>🔍 ${c.deep_dives.length} 深入点</span>
+                    </div>
+                `;
+                casesGrid.appendChild(card);
             });
         }
 
-        // Create case card element
-        function createCaseCard(caseItem) {
-            const card = document.createElement('div');
-            card.className = 'case-card';
-            card.onclick = () => {
-                window.location.href = `case-detail.html?id=${caseItem.id}`;
-            };
-
-            const categoryClass = caseItem.category === 'Product Design' ? 'category-product' : 'category-infrastructure';
-            const difficultyClass = caseItem.difficulty === 'Medium' ? 'difficulty-medium' : 'difficulty-hard';
-
-            const functionalCount = caseItem.requirements.functional.length;
-            const deepDiveCount = caseItem.deep_dives.length;
-
-            card.innerHTML = `
-                <div class="case-header">
-                    <div>
-                        <h3 class="case-title">${caseItem.title}</h3>
-                        <span class="case-category ${categoryClass}">${caseItem.category}</span>
-                    </div>
-                    <div>
-                        <div class="difficulty ${difficultyClass}">${caseItem.difficulty}</div>
-                    </div>
-                </div>
-                <div class="case-preview">
-                    ${caseItem.requirements.functional[0]}
-                </div>
-                <div class="case-stats">
-                    <div class="stat-item">
-                        <span>📋</span>
-                        <span>${functionalCount} Requirements</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>🔍</span>
-                        <span>${deepDiveCount} Deep Dives</span>
-                    </div>
-                </div>
-            `;
-
-            return card;
-        }
-
-        // Filter functionality
         filterButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 filterButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                const filter = btn.dataset.filter;
-                currentFilter = filter;
-                renderCases(filter);
+                renderCases(btn.dataset.filter);
             });
         });
 
-        // Initial render
         renderCases();
     </script>
+    <script src="js/shortcuts.js"></script>
 </body>
 </html>
