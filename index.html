@@ -14,7 +14,6 @@
     <div class="nav-links">
       <a href="learn.html">学习</a>
       <a href="flashcard.html">闪卡</a>
-      <a href="behavioral.html">Behavioral</a>
       <a href="roots.html">索引</a>
       <a href="deepdive.html">深入</a>
       <a href="progress.html">进度</a>
@@ -37,10 +36,6 @@
         <a href="flashcard.html" class="btn btn-secondary">闪卡复习</a>
       </div>
     </div>
-
-    <div class="demo-animation" id="demo">
-      <!-- JS 动态加载 -->
-    </div>
   </main>
 
   <section class="stats">
@@ -53,33 +48,53 @@
       <div class="stat-label">原视频数</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">35h</div>
-      <div class="stat-label">内容浓缩</div>
+      <div class="stat-value">8</div>
+      <div class="stat-label">功能模块</div>
     </div>
   </section>
 
   <section class="categories">
-    <h2>知识分类</h2>
+    <h2>学习模块</h2>
     <div class="category-grid">
-      <div class="category-card" onclick="filterCategory('基础概念')">
-        <div class="category-icon">📚</div>
-        <div class="category-name">基础概念</div>
-        <div class="category-count">8 个</div>
+      <div class="category-card" onclick="location.href='learn.html'">
+        <div class="category-icon">📖</div>
+        <div class="category-name">渐进学习</div>
+        <div class="category-count">30 个概念</div>
       </div>
-      <div class="category-card" onclick="filterCategory('设计题目')">
+      <div class="category-card" onclick="location.href='flashcard.html'">
+        <div class="category-icon">🎴</div>
+        <div class="category-name">面试闪卡</div>
+        <div class="category-count">30 道真题</div>
+      </div>
+      <div class="category-card" onclick="location.href='quiz.html'">
+        <div class="category-icon">✅</div>
+        <div class="category-name">Quiz 测试</div>
+        <div class="category-count">自测掌握程度</div>
+      </div>
+      <div class="category-card" onclick="location.href='cases.html'">
         <div class="category-icon">🏗️</div>
-        <div class="category-name">设计题目</div>
-        <div class="category-count">12 个</div>
+        <div class="category-name">Design 案例</div>
+        <div class="category-count">12 个经典题</div>
       </div>
-      <div class="category-card" onclick="filterCategory('深入技术')">
+      <div class="category-card" onclick="location.href='deepdive.html'">
         <div class="category-icon">🔬</div>
-        <div class="category-name">深入技术</div>
-        <div class="category-count">6 个</div>
+        <div class="category-name">Deep Dive</div>
+        <div class="category-count">5 大核心组件</div>
       </div>
-      <div class="category-card" onclick="filterCategory('面试技巧')">
-        <div class="category-icon">💡</div>
-        <div class="category-name">面试技巧</div>
-        <div class="category-count">4 个</div>
+      <div class="category-card" onclick="location.href='behavioral.html'">
+        <div class="category-icon">💬</div>
+        <div class="category-name">Behavioral</div>
+        <div class="category-count">STAR 故事模板</div>
+      </div>
+      <div class="category-card" onclick="location.href='calculator.html'">
+        <div class="category-icon">🧮</div>
+        <div class="category-name">估算计算器</div>
+        <div class="category-count">QPS/存储/带宽</div>
+      </div>
+      <div class="category-card" onclick="location.href='progress.html'">
+        <div class="category-icon">📊</div>
+        <div class="category-name">学习进度</div>
+        <div class="category-count">追踪掌握情况</div>
       </div>
     </div>
   </section>
@@ -94,26 +109,5 @@
       内容来源：<a href="https://www.youtube.com/@hello_interview" target="_blank">Hello Interview</a>
     </p>
   </footer>
-
-  <script src="wordData.js"></script>
-  <script>
-    // 动画展示前5个概念
-    const demo = document.getElementById('demo');
-    if (typeof WordRoots !== 'undefined') {
-      const samples = WordRoots.slice(0, 5);
-      let html = '';
-      samples.forEach((item, i) => {
-        html += `<div class="demo-item" style="animation-delay: ${i * 0.2}s">
-          <span class="demo-root">${item.root}</span>
-          <span class="demo-meaning">${item.meaning}</span>
-        </div>`;
-      });
-      demo.innerHTML = html;
-    }
-
-    function filterCategory(cat) {
-      window.location.href = `roots.html?category=${encodeURIComponent(cat)}`;
-    }
-  </script>
 </body>
 </html>

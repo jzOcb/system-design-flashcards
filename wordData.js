@@ -450,7 +450,12 @@ const WordRoots = [
       "查询：只能按键查询，不支持 JOIN",
       "GSI：以其他属性为分区键建索引"
     ],
-    videoId: "DynamoDB Deep Dive"
+    videoId: "DynamoDB Deep Dive",
+    quiz: {
+      question: "DynamoDB 的 GSI（全局二级索引）的作用是什么？",
+      options: ["加速主键查询", "支持以其他属性为查询条件", "自动备份数据", "提高写入性能"],
+      correctAnswer: 1
+    }
   },
   {
     id: 26,
@@ -463,7 +468,12 @@ const WordRoots = [
       "查询：SELECT mean(usage) WHERE time > now() - 1h GROUP BY time(5m)",
       "降采样：1 秒数据 → 1 分钟聚合"
     ],
-    videoId: "Qd76ZmfRs_Q"
+    videoId: "Qd76ZmfRs_Q",
+    quiz: {
+      question: "时序数据库最适合以下哪种场景？",
+      options: ["电商订单管理", "服务器监控指标存储和查询", "用户关系图谱", "文档内容管理"],
+      correctAnswer: 1
+    }
   },
 
   // === 面试技巧 (Interview Skills) ===
@@ -478,7 +488,12 @@ const WordRoots = [
       "权衡：一致性 vs 可用性，成本 vs 性能",
       "深入：选一个组件深挖，展示专业度"
     ],
-    videoId: "Ru54dxzCyD0"
+    videoId: "Ru54dxzCyD0",
+    quiz: {
+      question: "系统设计面试的时间分配中，哪个环节应该占用最多时间？",
+      options: ["需求澄清（5min）", "高层架构设计（25min）", "深入探讨（15min）", "API 设计（10min）"],
+      correctAnswer: 1
+    }
   },
   {
     id: 28,
@@ -491,7 +506,12 @@ const WordRoots = [
       "失败：上线 bug 导致故障 → 改进测试流程",
       "影响：推动团队采用新技术 → 效率提升 30%"
     ],
-    videoId: "CAda15Tawlg"
+    videoId: "CAda15Tawlg",
+    quiz: {
+      question: "STAR 方法中的 'R' 代表什么？",
+      options: ["Request（请求）", "Result（结果）", "Response（响应）", "Review（复盘）"],
+      correctAnswer: 1
+    }
   },
   {
     id: 29,
@@ -504,7 +524,12 @@ const WordRoots = [
       "存储：1B 用户 × 1KB profile = 1 TB",
       "峰值：平均 QPS × 3-5"
     ],
-    videoId: "Ru54dxzCyD0"
+    videoId: "Ru54dxzCyD0",
+    quiz: {
+      question: "在粗略估算中，1 天大约等于多少秒？",
+      options: ["10^4 秒", "10^5 秒", "10^6 秒", "10^7 秒"],
+      correctAnswer: 1
+    }
   },
   {
     id: 30,
@@ -517,7 +542,12 @@ const WordRoots = [
       "Push vs Pull：小粉丝量 → Push；大 V → Pull",
       "同步 vs 异步：用户感知延迟敏感 → 同步；后台处理 → 异步"
     ],
-    videoId: "Ru54dxzCyD0"
+    videoId: "Ru54dxzCyD0",
+    quiz: {
+      question: "在系统设计面试中，讨论权衡（Trade-offs）的主要目的是什么？",
+      options: ["展示你知道所有技术方案", "证明某个方案绝对正确", "展示思考过程和场景分析能力", "批评其他方案的缺点"],
+      correctAnswer: 2
+    }
   }
 ];
 

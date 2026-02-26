@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Design Cases - Hello Interview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .cases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .case-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+
+        .case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .case-title {
+            font-size: 1.4rem;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .case-category {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .category-product {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .category-infrastructure {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .difficulty {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .difficulty-medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .difficulty-hard {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .case-preview {
+            color: #666;
+            font-size: 0.95rem;
+            margin-top: 12px;
+        }
+
+        .case-stats {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            font-size: 0.85rem;
+            color: #888;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+            transform: translateX(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .cases-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Home</a>
+        
+        <header>
+            <h1>System Design Cases</h1>
+            <p class="subtitle">Interactive guides for common system design interview questions</p>
+        </header>
+
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all">All Cases</button>
+            <button class="filter-btn" data-filter="product">Product Design</button>
+            <button class="filter-btn" data-filter="infrastructure">Infrastructure Design</button>
+            <button class="filter-btn" data-filter="medium">Medium</button>
+            <button class="filter-btn" data-filter="hard">Hard</button>
+        </div>
+
+        <div class="cases-grid" id="casesGrid">
+            <!-- Cases will be dynamically loaded here -->
+        </div>
+    </div>
+
+    <script src="casesData.js"></script>
+    <script>
+        const casesGrid = document.getElementById('casesGrid');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        let currentFilter = 'all';
+
+        // Render cases
+        function renderCases(filter = 'all') {
+            casesGrid.innerHTML = '';
+            
+            const filteredCases = casesData.cases.filter(caseItem => {
+                if (filter === 'all') return true;
+                if (filter === 'product') return caseItem.category === 'Product Design';
+                if (filter === 'infrastructure') return caseItem.category === 'Infrastructure Design';
+                if (filter === 'medium') return caseItem.difficulty === 'Medium';
+                if (filter === 'hard') return caseItem.difficulty === 'Hard';
+                return true;
+            });
+
+            filteredCases.forEach(caseItem => {
+                const caseCard = createCaseCard(caseItem);
+                casesGrid.appendChild(caseCard);
+            });
+        }
+
+        // Create case card element
+        function createCaseCard(caseItem) {
+            const card = document.createElement('div');
+            card.className = 'case-card';
+            card.onclick = () => {
+                window.location.href = `case-detail.html?id=${caseItem.id}`;
+            };
+
+            const categoryClass = caseItem.category === 'Product Design' ? 'category-product' : 'category-infrastructure';
+            const difficultyClass = caseItem.difficulty === 'Medium' ? 'difficulty-medium' : 'difficulty-hard';
+
+            const functionalCount = caseItem.requirements.functional.length;
+            const deepDiveCount = caseItem.deep_dives.length;
+
+            card.innerHTML = `
+                <div class="case-header">
+                    <div>
+                        <h3 class="case-title">${caseItem.title}</h3>
+                        <span class="case-category ${categoryClass}">${caseItem.category}</span>
+                    </div>
+                    <div>
+                        <div class="difficulty ${difficultyClass}">${caseItem.difficulty}</div>
+                    </div>
+                </div>
+                <div class="case-preview">
+                    ${caseItem.requirements.functional[0]}
+                </div>
+                <div class="case-stats">
+                    <div class="stat-item">
+                        <span>📋</span>
+                        <span>${functionalCount} Requirements</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>🔍</span>
+                        <span>${deepDiveCount} Deep Dives</span>
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Filter functionality
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                currentFilter = filter;
+                renderCases(filter);
+            });
+        });
+
+        // Initial render
+        renderCases();
+    </script>
+</body>
+</html>
